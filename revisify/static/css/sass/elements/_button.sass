@@ -1,0 +1,27 @@
+// main: ../main.sass
+
+button
+  font-family: 'Texta-Regular', sans-serif
+  font-size: 2.7em
+  line-height: 1.2em
+  display: block
+  clear: both
+  margin: 1em auto
+  padding: 0.3em 1.5em
+  cursor: pointer
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  text-align: center
+  border: none
+  border-radius: 5px
+  outline: none
+  background-color: $grey-1
+  transition: transform 100ms
+
+  &:active
+    transform: scale(0.95)
+
+@media only screen and (min-width: $tablet)
+  button
+    font-size: 3em

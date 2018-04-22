@@ -1,0 +1,81 @@
+// main: ../main.sass
+
+.circleIcon
+  width: 100%
+  position: relative
+
+  div
+    font-size: 30vw
+    position: absolute
+    text-align: center
+    width: 100%
+    font-family: 'Texta-Regular', sans-serif
+    color: $grey-2
+    line-height: 1
+    left: 0
+    top: 10%
+
+
+  p
+    margin-top: 0
+    font-size: 2em
+    line-height: 1.2em
+    word-wrap: break-word
+    -webkit-hyphens: auto
+    -moz-hyphens: auto
+    hyphens: auto
+    -ms-hyphens: auto
+
+  $radius: 48
+  $circumference: (3.14159265359 * (2 * $radius))
+
+  svg
+    max-width: 220px
+    margin: 0 auto 10px
+    display: block
+    stroke-dasharray: $circumference
+    stroke-dashoffset: $circumference
+    transition: stroke-dasharray 700ms ease-out
+
+    circle
+      transform-origin: 50% 50%
+      -webkit-transform-origin: 50% 50%
+      -moz-transform-origin: 50% 50%
+      -ms-transform-origin: 50% 50%
+
+      // Transform is set to 269deg since in Safari, 270deg does nothing
+      // Unsure as to why
+      transform: rotate(269deg)
+      -webkit-transform: rotate(269deg)
+      -moz-transform: rotate(269deg)
+      -ms-transform: rotate(269deg)
+
+    text
+      font-family: $font-regular
+      font-size: 70px
+      tspan
+        font-family: $font-regular
+        font-size: 70px
+
+      &.circleIconAction
+        tspan
+          font-size: 22px
+  &.add
+    svg
+      fill: $grey-4
+
+      tspan
+        fill: $grey-2
+
+@media only screen and (min-width: $tablet)
+  .circleIcon
+    p
+      font-size: 2.5em
+
+@media only screen and (min-width: $desktop)
+  .circleIcon
+    svg
+      max-width: 250px
+
+    p
+      font-size: 2.8em

@@ -1,0 +1,52 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Contact Us{% endblock %}
+
+{% block head %}
+<meta name="description" content="We love to hear back you, just send us a quick message.">
+{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Contact Us</h1>
+  <p>If you need help, have a suggestion, found a bug or just want to chat fill out the form below.</p>
+	<form method='POST' action="">
+		{{ form.hidden_tag() }}
+
+		{% if not current_user.is_anonymous() %}
+			<div style="display: none;">
+		{% endif%}
+
+		{{ form.name(placeholder='Name', class="textBox", maxlength="100", id="contactName") }}
+		{% for error in form.name.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{{ form.email(placeholder='Email', class="textBox", maxlength="320", id="contactEmail") }}
+		{% for error in form.email.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{% if not current_user.is_anonymous() %}
+			</div>
+		{% endif%}
+
+		{{ form.message(placeholder='Message', class="textBox", style="height: 200px;") }}
+		{% for error in form.message.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		<button onclick="submit()">Send</button>
+	</form>
+</section>
+
+{{ flexible() }}
+{% endblock %}
+
+{% if name %}
+	{% block javascript %}
+		<script>
+			$('#contactName').val('{{ name|safeJavascript }}');
+			$('#contactEmail').val('{{ email|safeJavascript }}');
+		</script>
+	{% endblock %}
+{% endif %}

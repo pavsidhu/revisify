@@ -1,0 +1,70 @@
+// main: ../main.sass
+
+.actionBar
+  font-family: $font-regular
+  font-size: 2.2em
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  text-align: right
+  margin: 15px 5px 0 0
+
+  li
+    display: inline
+    margin-right: 15px
+    margin-left: 15px
+    cursor: pointer
+    color: $grey-1
+    font-size: 0
+
+    svg
+      display: inline
+      height: 25px
+
+    &.doneButton
+      display: none
+
+    &:hover
+      color: white
+
+  + div.row .column:nth-child(1) .columnContainer
+    margin-top: 0
+
+@media only screen and (min-width: $tablet)
+  .actionBar
+    max-width: 1460px
+    width: 96.8%
+    font-size: 2.7em
+    margin: 15px auto 5px
+    text-align: right
+
+    li
+      font-size: 1em
+      margin-left: 30px
+      margin-right: 0
+
+      svg
+        height: 22px
+        width: 22px
+        margin-right: 5px
+        position: relative
+        top: 2px
+
+@media only screen and (min-width: $desktop)
+  .actionBar
+    li
+      svg
+        position: relative
+        top: 2px
+        transition: transform 200ms
+
+      &:hover
+        svg
+          transform: scale(1.15)
+
+      &:active
+        svg
+          transform: scale(1)
+
+    + div.row
+      margin-top: 0

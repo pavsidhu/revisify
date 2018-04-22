@@ -1,0 +1,9 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Account Suspended{% endblock %}
+{% block content %}
+<section>
+	<h1>Your Account Has Been Suspended</h1>
+	<p>This is because your account has violated Revisify's <a href="{{ url_for('footer.terms') }}" class="underline">Terms of Service</a>.</p>
+	<p>If you believe our decision is an error, please email us at <a href="mailto:support@revisify.com?subject=My Account is Banned" class="underline">support@revisify.com</a>.</p>
+</section>
+{% endblock %}

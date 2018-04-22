@@ -1,0 +1,326 @@
+// main: ../main.sass
+
+.userProfileCover
+  background-size: cover
+  background-image: #CFD8DC
+  background-position: center 35%
+  margin-top: 7em
+  z-index: -1
+  overflow: hidden
+  width: 100%
+  padding-bottom: 30%
+  transition: padding-bottom 0.15s ease-in-out
+  -webkit-transition: padding-bottom 0.15s ease-in-out
+
+.userProfileBar
+  background-color: $grey-1
+  width: 100%
+  font-family: 'Texta-Regular', sans-serif
+  font-size: 1.8em
+  position: relative
+  bottom: 1em
+  padding-bottom: 0.5em
+
+  span
+    &:last-of-type
+      border: none
+
+    &:hover
+      color: white
+
+.userProfileDetails
+  position: relative
+  bottom: 2em
+  margin-left: 15px
+
+  h1, .userProfileInfo
+    padding-left: 10px
+
+.userProfileDetailsDesktop
+  display: none
+
+.userProfilePicture
+  display: block
+  width: 6.5em
+  height: 6.5em
+  border-radius: 50%
+  overflow: hidden
+  position: relative
+  background-size: contain
+  background-color: $grey-2
+  display: inline-block
+
+  p
+    background-color: rgba(1, 1, 1, 0.5)
+    position: absolute
+    bottom: 0
+    width: 100%
+    font-size: 1.3em
+    color: $grey-1
+    cursor: pointer
+
+  ~ h1
+    /*font-size: 5em;
+    font-size: 1.4em
+    word-wrap: break-word
+    margin: 0 0 0 0
+
+    /*margin: 10px 0;
+    color: inherit
+    text-align: left
+
+.userProfileInfo
+  margin-top: 0
+  font-size: 1em
+  word-wrap: break-word
+  color: inherit
+  text-align: left
+
+  svg
+    height: 1em
+    width: 1em
+    fill: $grey-3
+    position: relative
+    top: 0.2em
+    margin-right: 0.2em
+
+.editProfileButton
+  display: inline-block
+  font-size: 1.2em
+  background-color: none
+  border: 2px solid $grey-3
+  color: $grey-3
+  padding: 8px 10px
+  margin: 10px 10px 0 0
+  float: right
+  position: relative
+  z-index: 1
+
+.followButton
+  display: inline-block
+  font-size: 1.2em
+  background-color: none
+  border: 2px solid $grey-3
+  color: $grey-3
+  padding: 8px 10px
+  margin: 10px 10px 0 0
+  float: right
+  position: relative
+  z-index: 1
+  max-width: 140px
+  min-width: 140px
+
+p.userProfileReport
+  font-size: 1em
+  position: absolute
+  right: 12px
+  z-index: 1
+  display: block
+  top: 2.5em
+  cursor: pointer
+
+.userProfileBarStats
+  text-align: center
+  width: 100%
+  position: absolute
+  bottom: 0
+  font-size: 1.05em
+  height: 1.9em
+  overflow: hidden
+
+  span
+    padding: 0.5em
+    z-index: 1
+    position: relative
+    cursor: pointer
+
+    &.active
+      -webkit-animation: userProfileBarStatsActive 0.2s forwards
+      animation: userProfileBarStatsActive 0.2s forwards
+
+    &.userProfileBarRight
+      display: none
+
+@-webkit-keyframes userProfileBarStatsActive
+  from
+    border-bottom: none
+    font-weight: 400
+
+  to
+    border-bottom: 0.3em solid $pink-2
+    font-weight: bold
+    color: inherit
+
+@keyframes userProfileBarStatsActive
+  from
+    border-bottom: none
+
+  to
+    border-bottom: 0.3em solid $pink-2
+    color: inherit
+
+.userProfileBarDivider
+  display: none
+
+.userSubjects
+  /* This prevents extra padding due to being section:first-of-type
+  padding-top: 0 !important
+
+.userFollowing,
+.userFollowers
+  padding-top: 0
+  display: none
+
+  a
+    position: relative
+
+.userProfileAdmin
+  text-align: right
+
+  span
+    margin-left: 20px
+
+@media only screen and (min-width: $tablet)
+  .userProfileCover
+    margin-top: 6.6em
+    padding-bottom: 30%
+
+  .userProfileBar
+    font-size: 2em
+    padding-bottom: 0.9em
+
+  .userProfilePicture
+    width: 9em
+    height: 9em
+
+    p
+      bottom: 0
+
+      /*font-size: 1.6em;
+
+    ~ h1
+      font-size: 1.9em
+      margin: 0 0 0 0
+
+  .userProfileInfo
+    margin-top: 0
+    font-size: 1.3em
+    word-wrap: break-word
+    color: inherit
+    text-align: left
+
+    svg
+      height: 1em
+      width: 1em
+      top: 0.2em
+      margin-right: 0.2em
+
+  .editProfileButton, .followButton
+    padding: 8px 10px
+    margin: 10px 50px 0 0
+
+  .userProfileBarStats
+    bottom: 0em
+    font-size: 1.4em
+    height: 1.95em
+
+@media only screen and (min-width: $desktop)
+  .userProfileCover
+    margin-top: 6.6em
+    padding-bottom: 255px
+
+  .userProfileBar
+    padding-bottom: 0
+    overflow: hidden
+
+    .userProfileDetails
+      display: none
+
+  .userProfileDetails
+    font-size: 2em
+    position: absolute
+    top: 145px
+    color: $grey-1
+
+  .userProfileDetailsDesktop
+    display: block
+    margin-left: 2.5em
+
+  .userProfilePicture
+    border: 3px solid $grey-3
+    width: 11.5em
+    height: 11.5em
+
+    p
+      font-size: 1.35em
+
+    ~ h1
+      font-size: 1.8em
+      margin-bottom: 10px
+
+  .userProfileInfo
+    font-size: 1.1em
+
+    svg
+      fill: $grey-1
+
+  .userProfileBar
+    .editProfileButton, .followButton
+      display: none
+
+  .userProfileDetailsDesktop
+    .editProfileButton, .followButton
+      border: none
+      margin: 1em 0
+      float: none
+      display: block
+      font-size: 1.3em
+      padding: 0.4em 0.8em
+
+  .followButton
+    border: none !important
+
+    /* To prevent border from AJAX or JS hover on click
+    max-width: 180px
+    min-width: 180px
+
+  .userProfileBarStats
+    font-size: 1.3em
+    position: static
+    padding: 0.4em 0
+    text-align: left
+    margin-left: 12em
+    height: 2.2em
+
+    span
+      padding: 0.38em 0.4em
+      margin: 0 0.3em
+
+      &.userProfileBarDivider
+        display: inline
+        padding: 5em 0.05em
+        background-color: $grey-2
+
+      &.userProfileBarRight
+        display: block
+        position: absolute
+        bottom: 0.2em
+        color: $grey-2
+        font-size: 0.8em
+
+        &.userProfileAdminBan,
+        &.userProfileReport
+          right: 40px
+
+        &.userProfileAdminWarn
+          right: 150px
+
+  .userSubjects
+    /* This prevents extra padding due to being section:first-of-type
+    padding-top: 30em !important
+
+  .userFollowing, .userFollowers
+    padding-top: 30em
+
+  .userProfileAdmin
+    display: none

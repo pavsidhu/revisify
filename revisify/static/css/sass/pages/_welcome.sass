@@ -1,0 +1,354 @@
+// main: ../main.sass
+
+nav
+  transition: background 100ms
+
+  .navText
+    transition: color 100ms
+
+  svg path
+    transition: fill 100ms
+
+  &.welcomeNavigation
+    background: none
+
+    .navText
+      color: white
+
+    svg path
+      fill: white
+
+.welcomeIntro
+  height: 100vh
+  background-color: $pink-3
+  position: relative
+  padding-top: 69px
+
+  .welcomeIntroContent
+    height: 35%
+    position: relative
+    z-index: 3
+
+    > div
+      position: relative
+      top: 50%
+      transform: translateY(-50%)
+
+      h1
+        color: $pink-1
+        margin-bottom: 0
+
+      button
+        background-color: $pink-1
+        color: $pink-3
+        margin: 10px 0 0
+
+  @keyframes welcomeIntroDevice
+    to
+      transform: translateY(0)
+
+  @-webkit-keyframes welcomeIntroDevice
+    to
+      transform: translateY(0)
+
+  .welcomeIntroDevice
+    position: absolute
+    bottom: 0
+    width: 100%
+    transform: translateY(100vh)
+    animation: welcomeIntroDevice 300ms 500ms forwards
+    -webkit-animation: welcomeIntroDevice 300ms 500ms forwards
+
+    img
+      width: 90%
+      max-width: 45vh
+      margin: 0 auto
+      display: block
+
+      &.welcomeIntroDeviceDesktop
+        display: none
+
+  .welcomeIntroMask
+    display: none
+
+  .welcomeArrow
+    display: none
+
+// Prevent contents of scrolling animation messing up the width
+.scrollme
+  overflow: hidden
+
+.welcome
+  padding: 3em 20px
+
+  .welcomeContent
+    max-width: 1500px
+    margin: 0 auto
+
+    h2
+      font-size: 3.5em
+      font-family: $font-bold
+
+    p
+      font-size: 2.2em
+      text-align: left
+
+  &.welcomeGrey
+    background-color: $grey-1
+
+    button
+      background-color: $pink-2
+      color: $pink-1
+      font-size: 2.2em
+      padding: 0.6em 1.4em
+      margin: 20px 0 0 0
+
+    *
+      color: $grey-3
+
+    p
+      max-width: 800px
+      margin: 0 auto
+
+    > p
+      text-align: left
+
+  &.welcomeHowRevisifyWorks
+    .welcomeHowRevisifyWorksSection
+      margin-bottom: 20px
+
+      .welcomeHowRevisifyWorksText
+        div
+          margin-bottom: 20px
+
+          p
+            margin-top: 10px
+
+      .welcomeHowRevisifyWorksExample
+        div
+          padding: 15px
+          margin: 0 auto
+          border-radius: 5px
+          max-width: 400px
+
+        img
+          width: 100%
+
+      &.welcomeHowRevisifyWorksEnterQuestions
+        .welcomeHowRevisifyWorksExample
+          div
+            background-color: $pink-3
+
+      &.welcomeHowRevisifyWorksTestYourself
+        .welcomeHowRevisifyWorksExample
+          div
+            background-color: $cyan-3
+
+      &.welcomeHowRevisifyWorksTrackProgress
+        margin-bottom: 0
+
+        .welcomeHowRevisifyWorksExample
+          div
+            background-color: $lime-3
+
+
+
+  &.welcomeTestimonial
+    .testimonialBubble
+      font-family: $font-regular
+      font-size: 2.2em
+      background-color: $grey-1
+      border-radius: 15px
+      padding: 25px
+      line-height: 1.4
+      max-width: 900px
+      margin: 0 auto
+
+    .testimonialBubbleArrow
+      margin: 0 auto
+      width: 70px
+      height: 70px
+      border-left: 35px solid rgba(0, 0, 0, 0)
+      border-right: 35px solid rgba(0, 0, 0, 0)
+      border-top: 40px solid $grey-1
+      position: relative
+      bottom: 1px
+
+    .testimonialStudent
+      img
+        margin: 0 auto
+        display: block
+        width: 10em
+        height: 10em
+
+      p
+        color: $grey-1
+        text-align: center
+        margin: 0 auto 25px
+
+  &.welcomeApp
+    .welcomeAppPhone
+      margin: 20px auto 0
+      // margin: 40px auto 0
+      display: block
+      width: 100%
+
+  &.welcomeGetStarted
+    padding-top: 50px
+    padding-bottom: 80px
+
+    h1
+      margin-bottom: 0
+
+    button
+      background-color: $pink-3
+      color: $pink-1
+      margin-bottom: 0
+
+@media only screen and (min-width: $tablet)
+  @keyframes welcomeIntro
+    to
+      transform: scale(1)
+
+  @-webkit-keyframes welcomeIntro
+    to
+      transform: scale(1)
+
+  .welcomeIntro
+    height: 85vh
+    overflow: hidden
+    transform: scale(2)
+    -webkit-animation: welcomeIntro 200ms 200ms ease-in-out forwards
+
+    .welcomeIntroContent
+      height: 35%
+
+    .welcomeIntroDevice
+      bottom: -5vw
+      animation-timing-function: cubic-bezier(0.42, 0.95, 0.69, 1.09)
+      -webkit-animation-timing-function: cubic-bezier(0.42, 0.95, 0.69, 1.09)
+
+      img
+        width: 100%
+        max-width: 90vh
+
+        margin: 0 auto
+        display: block
+
+        &.welcomeIntroDeviceMobile
+          display: none
+
+        &.welcomeIntroDeviceDesktop
+          display: block
+
+    .welcomeIntroMask
+      display: block
+      position: absolute
+      bottom: -2px
+      width: 100%
+      z-index: 2
+      fill: $grey-3
+
+    img
+      margin: 0 auto
+
+  .welcome
+    h2
+      font-size: 4.2em
+
+    &.welcomeApp
+      .welcomeAppPhone
+        width: 40%
+
+
+@media only screen and (min-width: $desktop)
+  .welcomeIntro
+    height: 100vh
+
+    .welcomeIntroContent
+      height: 25%
+
+    .welcomeIntroDevice
+      img
+        width: 100%
+        max-width: 120vh
+
+        margin: 0 auto
+        display: block
+
+        &.welcomeIntroDeviceMobile
+          display: none
+
+        &.welcomeIntroDeviceDesktop
+          display: block
+
+    @keyframes welcomeArrow
+      to
+        opacity: 1
+        transform: translateY(0)
+
+    .welcomeArrow
+      display: block
+      position: absolute
+      width: 100%
+      bottom: 1vw
+      z-index: 2
+      transform: translateY(-50px)
+      opacity: 0
+      animation: welcomeArrow 250ms 900ms forwards
+
+      img
+        display: block
+        margin: 0 auto
+        fill: $grey-1
+        height: 40px
+        width: 60px
+        cursor: pointer
+
+  .welcome
+    &.welcomeHowRevisifyWorks
+      .welcomeHowRevisifyWorksSection
+        &:not(last-of-type)
+          margin-bottom: 50px
+
+        .welcomeHowRevisifyWorksText
+          div
+            width: 50%
+            float: right
+            margin-right: 20px
+
+          &.large-push-6
+            div
+              width: 50%
+              float: left
+              margin-left: 20px
+
+        .welcomeHowRevisifyWorksExample
+          div
+            width: 50%
+            float: left
+            margin-left: 20px
+
+          &.large-pull-6
+            div
+              width: 50%
+              float: right
+              margin-right: 20px
+
+    &.welcomeTestimonial
+      .testimonialBubble
+        padding: 40px
+
+    &.welcomeApp
+      .welcomeAppPhone
+        width: 25%
+
+    &.welcomeGetStarted
+      padding-top: 150px
+      padding-bottom: 150px
+
+@media screen\0
+  .welcomeIntroMask,
+  .welcomeArrow,
+  .welcomeArrow *,
+    display: none !important

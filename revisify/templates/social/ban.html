@@ -1,0 +1,20 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Ban User{% endblock %}
+
+{% block content %}
+<section>
+
+  <h1>Ban User</h1>
+
+  <form method="POST" id="banUserForm">
+    {{ form.hidden_tag() }}
+
+    {{ form.reason(class="textBox", id="reason", placeholder="Enter your reason", autocomplete="off", maxlength=255) }}
+    <p class="errorText" style="display: none;"></p>
+    <p class="successText" style="display: none;"></p>
+
+    <button type="button" class="popupButton" onclick="banUserSend()">Report</button>
+  </form>
+
+</section>
+{% endblock %}

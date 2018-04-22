@@ -1,0 +1,43 @@
+// main: ../main.sass
+
+.noContent
+  cursor: auto
+
+  li
+    display: none
+
+    &:nth-child(1),
+    &:nth-child(2),
+    &:nth-child(3),
+    &:nth-child(4)
+      display: inline
+
+    svg
+      circle
+        fill: $grey-4
+        opacity: 0.4
+
+  h2
+    position: relative
+    font-size: 3em
+    bottom: 6.9em
+
+@media only screen and (min-width: $tablet)
+  .noContent
+    li
+      &:nth-child(5),
+      &:nth-child(6)
+        display: inline
+
+    h2
+      font-size: 3.5em
+      bottom: 7.6em
+
+@media only screen and (min-width: $desktop)
+  .noContent
+    li
+      display: inline
+
+    h2
+      font-size: 3.8em
+      bottom: 8.4em

@@ -1,0 +1,65 @@
+// main: ../main.sass
+
+.weeklyGoal
+  svg.weeklyGoalChart
+    display: block
+    margin: 0 auto
+    max-width: 100%
+    max-height: 100%
+    max-width: 20em
+    max-height: 20em
+
+    .weeklyGoalChartProgress
+      transform: rotateZ(269.9deg)
+      transform-origin: 50% 50%
+
+      $radius: 80
+      $circumference: (3.14159265359 * (2 * $radius))
+
+      stroke-dasharray: $circumference
+      stroke-dashoffset: $circumference
+
+      transition: stroke-dasharray 700ms ease-out
+      transition: stroke-dashoffset 700ms ease-out
+
+    text
+      font-family: $font-regular
+      fill: $grey-1
+
+      tspan
+        &.weeklyGoalFraction
+          font-size: 45px
+
+        &.weeklyGoalDescription
+          font-size: 30px
+
+  p
+    position: absolute
+    margin: 0
+    width: 100%
+    top: 3.1em
+    left: 0em
+    color: $grey-1
+
+    span
+      display: block
+      font-size: 2em
+      line-height: 0.9em
+
+  .columnContainerBottom
+      svg.columnContainerBottomRight:hover
+        transform: rotateZ(25deg)
+
+@media only screen and (min-width: $tablet)
+  .weeklyGoal p
+    top: 2.6em
+
+@media only screen and (min-width: $desktop)
+  .weeklyGoal
+    .weeklyGoalChart
+      width: 90%
+      height: 90%
+      max-width: 20em
+
+    p
+      top: 2.6em

@@ -1,0 +1,29 @@
+// main: ../main.sass
+
+.chart
+  width: 90%
+  margin: 0 auto
+
+  canvas
+    width: 100%
+    height: 23em
+    margin: 20px 0
+
+@media only screen and (min-width: $tablet)
+  .chart
+    width: 80%
+    margin: 0 auto
+    max-width: 800px
+
+    canvas
+      height: 30em
+
+
+@media only screen and (min-width: $desktop)
+  .chart
+    width: 40%
+    max-width: 900px
+
+    canvas
+      width: auto
+      height: auto

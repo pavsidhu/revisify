@@ -1,0 +1,59 @@
+// main: ../main.sass
+
+.row
+  &.limitRowWidth
+    max-width: 1500px
+
+  .column
+    .columnContainer
+      background-color: rgba(0, 0, 0, 0.08)
+      border-radius: 15px
+      margin: 2em 0em 0
+      padding: 2em 1em
+
+      > h2:first-child
+        font-size: 3em
+        margin-bottom: 0.8em
+
+    &.large-3
+      p
+        font-size: 2em
+
+    &.large-9
+      .columnContainer:first-of-type
+        margin-top: 0
+
+    .columnContainerBottom
+      margin-top: 2em
+      height: 3em
+
+      svg
+        width: 3em
+        height: 3em
+        fill: $grey-2
+        transition: transform 0.3s
+        cursor: pointer
+
+        &:hover
+          transform: scale(1.1)
+          fill: $grey-1
+
+        &:active
+          transform: scale(0.9)
+          fill: $grey-3
+
+        &.columnContainerBottomLeft
+          float: left
+          margin-left: 1em
+
+        &.columnContainerBottomRight
+          float: right
+          margin-right: 1em
+
+@media only screen and (min-width: $desktop)
+  // Set columns in first row to have no top margin on desktop
+  section > .row
+    &:first-of-type
+      .column
+        .columnContainer:first-child
+          margin-top: 0

@@ -1,0 +1,259 @@
+{% extends "default.html" %}
+
+{% block title %}Revisify - Create a New Topic{% endblock %}
+
+{% block head %}
+<style>
+	.questionToolbar {
+		background-color: {{ bgcolor }};
+		border-color: {{ navcolor }};
+	}
+
+	.questionToolbar svg {
+		fill: {{ textcolor }};
+	}
+
+	.questionToolbar .dummyToolbar svg {
+		fill: {{ iconcolor }};
+	}
+
+	.questionToolbar.questionToolbarSticky {
+		border-bottom: 3px solid {{ navcolor }};
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), linear-gradient(to top, {{ bgcolor }}, {{ bgcolor }});
+	}
+
+	.wysihtml5-command-active,
+	.wysihtml5-command-dialog-opened {
+		fill: {{ iconcolor }} !important;
+	}
+
+	.questionBar svg {
+		fill: {{ textcolor }};
+	}
+
+	.topicText {
+		background-color: {{ textcolor }};
+	}
+
+	.topicText a {
+	  color: {{ iconcolor }};
+		border-color: {{ iconcolor }};
+	}
+
+	.editorSortPlaceholder {
+		background-color: {{ navcolor }};
+	}
+
+	.addQuestionButton {
+		background-color: {{ iconcolor }};
+	}
+
+	/* This is added due to overview page needing a different placeholder */
+	.answerTopicText[contenteditable="true"]:empty:before{
+		content: "Enter your answer"
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="topicCreate">
+	<h1>Create a New Topic</h1>
+
+	<form method="POST" id="sendTopicForm">
+		<input type="text" name="topicName" class="textBox topicName" placeholder="Enter a topic name" autocomplete="off" maxlength="150">
+
+		<p class="errorText topicError" style="color: {{ textcolor }};"></p>
+	</form>
+
+	<div class="row limitRowWidth">
+		<div class="column small-12">
+			<div class="columnContainer">
+				{{ advert() }}
+
+				<!--  Sticky Question/Answer Formatting Toolbar -->
+				<div class="questionToolbar">
+					<div class="row">
+						<div class="column small-12 large-6 toolbarContainer">
+
+							<div class="toolbar dummyToolbar">
+								<svg class="boldButton" viewBox="0 0 71.4 71.4">
+									<path d="M53.8,39.4c-1.7-2.3-4.3-3.9-7.8-4.7c6-1.9,9-5.6,9-11.1c0-2.7-0.7-5-2.1-7c-1.4-1.9-3.1-3.4-5.2-4.4c-2.1-1-5.2-1.5-9.4-1.5H15.1v50h23.3c6.4,0,11-1.4,13.8-4.1c2.8-2.7,4.2-6,4.2-9.7C56.4,44.2,55.5,41.7,53.8,39.4z M26.7,19.6h8c2.4,0,4.1,0.1,4.9,0.4s1.6,0.8,2.3,1.7c0.7,0.9,1,2,1,3.3c0,1.2-0.4,2.4-1.3,3.7c-0.8,1.3-2.9,1.9-6.1,1.9h-8.9V19.6z M42.2,49.8c-1.3,1.1-3.4,1.6-6.5,1.6h-9V39.4h9.5c2.8,0,4.8,0.6,6.1,1.8c1.2,1.2,1.8,2.6,1.8,4.2C44.1,47.3,43.5,48.8,42.2,49.8z">
+								</svg>
+								<svg class="italicButton" viewBox="0 0 71.4 71.4">
+									<polygon points="17.6,60.7 18.7,53.6 27.9,53.6 33.1,17.8 23.6,17.8 24.7,10.7 53.9,10.7 52.8,17.8 42.9,17.8 37.7,53.6 47.9,53.6 46.8,60.7">
+								</svg>
+								<svg class="subscriptButton" viewBox="0 0 71.4 71.4">
+									<path d="M3.1,10.7h39.8v8.8H28v41.2H17.9V19.6H3.1V10.7z"/>
+									<path d="M47.4,56.5l11.3-11c1.8-1.8,2.3-2.9,2.3-4.7c0-2.3-1.8-4.2-4.7-4.2c-3,0-5,1.8-6.5,2.9l-3.1-4.7c0,0,3.7-3.9,10.2-3.9c7.1,0,11,4.2,11,9.2c0,3.1-0.9,5.4-3.3,7.8l-7.9,7.7h11.6v5.1H47.4V56.5z"/>
+								</svg>
+								<svg class="superscriptButton" viewBox="0 0 71.4 71.4">
+									<path d="M3.1,10.7h39.8v8.8H28v41.2H17.9V19.6H3.1V10.7z"/>
+									<path d="M47.4,36.3l11.3-11c1.8-1.8,2.3-2.9,2.3-4.7c0-2.3-1.8-4.2-4.7-4.2c-3,0-5,1.8-6.5,2.9l-3.1-4.7c0,0,3.7-3.9,10.2-3.9c7.1,0,11,4.2,11,9.2c0,3.1-0.9,5.4-3.3,7.8l-7.9,7.7h11.6v5.1H47.4V36.3z"/>
+								</svg>
+								<svg class="linkButton" viewBox="0 0 71.4 71.4">
+								<path d="M56.8,33.4l-9.4,9.4c-5.2,5.2-13.6,5.2-18.8,0c-0.8-0.8-1.5-1.7-2-2.7l4.4-4.4c0.2-0.2,0.5-0.3,0.7-0.5c0.3,1,0.8,2,1.6,2.8c2.6,2.6,6.8,2.6,9.4,0l9.4-9.4c2.6-2.6,2.6-6.8,0-9.4c-2.6-2.6-6.8-2.6-9.4,0l-3.3,3.3c-2.7-1.1-5.6-1.3-8.5-0.9l7.1-7.1c5.2-5.2,13.6-5.2,18.8,0C62,19.8,62,28.2,56.8,33.4z M32,48.8l-3.3,3.3c-2.6,2.6-6.8,2.6-9.4,0s-2.6-6.8,0-9.4l9.4-9.4c2.6-2.6,6.8-2.6,9.4,0c0.8,0.8,1.3,1.8,1.6,2.8c0.2-0.1,0.5-0.3,0.7-0.5l4.4-4.4c-0.6-0.9-1.2-1.9-2-2.7c-5.2-5.2-13.6-5.2-18.8,0l-9.4,9.4c-5.2,5.2-5.2,13.6,0,18.8c5.2,5.2,13.6,5.2,18.8,0l7.1-7.1C37.6,50.1,34.7,49.9,32,48.8z">
+								</svg>
+								<svg class="bulletButton" viewBox="0 0 71.4 71.4">
+									<circle cx="12.8" cy="17" r="6.3"/>
+									<circle cx="12.8" cy="35.5" r="6.3"/>
+									<circle cx="12.8" cy="54.5" r="6.3"/>
+									<path d="M25.2,21.4h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3c0-0.7-0.6-1.2-1.3-1.2H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3C23.9,20.8,24.5,21.4,25.2,21.4z"/>
+									<path d="M63.6,31.1H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3c0,0.7,0.6,1.2,1.3,1.2h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3C64.9,31.6,64.3,31.1,63.6,31.1z"/>
+									<path d="M63.6,50.1H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3c0,0.7,0.6,1.2,1.3,1.2h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3C64.9,50.6,64.3,50.1,63.6,50.1z"/>
+								</svg>
+								<svg class="imageButton" viewBox="0 0 71.4 71.4">
+									<path d="M10.7,10.7l0,50h50l0-50H10.7z M55.2,16.2l0,32.1l-9.5-11.4l-7.3,7.7L26.6,30.5L16.2,46.8l0-30.5H55.2z"/>
+									<path d="M41.2,30.4c2.2,0,4-1.8,4-4s-1.8-4-4-4c-2.2,0-4,1.8-4,4C37.2,28.6,39,30.4,41.2,30.4z"/>
+								</svg>
+							</div>
+
+						</div>
+
+						<div class="column small-6 saveTopicContainer">
+							<button class="saveTopic">Save</button>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="topicQuestions">
+
+					{% for number in range(1, 3) %}
+
+					<div class="editor" id="editor{{ number }}" data-question="{{ number }}">
+
+						<ul class="questionBar small-block-grid-3" id="questionBar{{ number }}">
+
+							<!-- Question Drag Handle and Number -->
+							<li>
+								<div class="questionSortHandlerContainer">
+									<svg class="questionSortHandle" viewBox="0 0 100 100">
+										<path d="M93.2,3.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V6.2C96.4,5,95,3.9,93.2,3.9z"/>
+										<path d="M93.2,38.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V41.2C96.4,40,95,38.9,93.2,38.9z"/>
+										<path d="M93.2,73.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V76.2C96.4,75,95,73.9,93.2,73.9z"/>
+									</svg>
+								</div>
+								<p class="questionNumber" id="number{{ number }}">#{{ number }}</p>
+							</li>
+
+							<!-- Add Question -->
+							<li>
+								<svg class="addQuestion" data-question="{{ number }}" id="addQuestion{{ number }}" viewBox="0 0 292.8 292.6">
+									<path d="M177.8,201.7v-23.8h43.5l63.2,0c4.6,0,8.3-3.7,8.3-8.3v-46.3c0-4.6-3.8-8.4-8.4-8.4h-78h-28.6V86.7l-0.1-78.4c0-4.6-3.7-8.3-8.3-8.3l-46.3,0c-4.6,0-8.3,3.7-8.3,8.3v71.9l0,34.8l-36.8,0l-69.8-0.1c-4.6,0-8.3,3.7-8.3,8.3l0,46.2c0,4.6,3.7,8.3,8.3,8.3h75.5h31.1v29.4l0,77.2c0,4.6,3.7,8.3,8.3,8.3l46.2,0c4.6,0,8.3-3.7,8.3-8.3L177.8,201.7z"/>
+								</svg>
+							</li>
+
+							<!-- Delete Question -->
+							<li class="deleteQuestionContainer">
+								<svg class="deleteQuestion" data-question="{{ number }}" id="deleteQuestion{{ number }}" viewBox="0 0 469.4 469.4">
+									<path d="M310.4,235.1L459.9,85.5c12.5-12.5,12.5-33,0-45.7L429.4,9.4c-12.5-12.5-33-12.5-45.7,0L234.3,159L85.6,10.3c-12.5-12.5-33-12.5-45.7,0L9.5,40.8C-3,53.3-3,73.7,9.5,86.4l148.6,148.6L9.7,383.5c-12.5,12.5-12.5,33,0,45.7l30.4,30.4c12.5,12.5,33,12.5,45.7,0l148.5-148.4L383.1,460c12.5,12.5,33,12.5,45.7,0l30.4-30.4c12.5-12.5,12.5-33,0-45.7L310.4,235.1z"/>
+								</svg>
+							</li>
+
+						</ul>
+
+						<div class="row">
+							<div class="small-12 medium-6 columns">
+								<div id="question{{ number }}" class="topicText questionTopicText mousetrap" number="{{ number }}">
+								</div>
+							</div>
+							<div class="small-12 medium-6 columns">
+								<div id="answer{{ number }}" class="topicText answerTopicText mousetrap" number="{{ number }}">
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					{% endfor %}
+				</div>
+
+				<div class="addQuestionButton unselectable">
+					<p>Add Question</p>
+				</div>
+
+				<button class="saveTopic">Save</button>
+
+			</div>
+		</div>
+	</div>
+
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/wysihtml-toolbar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parserRules.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mousetrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/topic.min.js', v=version) }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.scrolltofixed.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sortable.min.js') }}"></script>
+
+<script>
+	{% for number in range(1, 3) %}
+		createEditor({{ number }});
+	{% endfor %}
+
+	questionNumber = $('.editor').length;
+
+	// If clicked an editor
+	$('body').on('focus click', function(e) {
+		interaction = true; // To enable prevent page leave
+
+		if ($(':focus').hasClass('questionTopicText')) {
+			var number = $(':focus').attr('number');
+			$('.questionToolbar').slideDown(50);
+			$('.toolbar').hide();
+			$('#toolbarQ' + number).show();
+		}
+		else if ($(':focus').hasClass('answerTopicText')) {
+			var number = $(':focus').attr('number');
+			$('.questionToolbar').slideDown(50);
+			$('.toolbar').hide();
+			$('#toolbarA' + number).show();
+		}
+		else if (!$(e.target).parents('.toolbarContainer').length) {
+			$('.toolbar').hide();
+			noToolbar();
+		}
+	});
+
+	// if typed in topic name or editor textboxes
+	$('body').on('keypress', 'input, .editor', function() {
+		interaction = true;
+	});
+
+	var list = document.getElementsByClassName('topicQuestions')[0];
+	var editableList = Sortable.create(list, {
+		animation: 150,
+		scrollSpeed: 15,
+		handle: '.questionSortHandlerContainer',
+		ghostClass: 'editorSortPlaceholder',
+		onEnd: function() { fixQuestionNumbers() }
+	});
+
+	// Initate scroll to fixed toolbar
+	if (!mobileDisplay()) {
+		$(document).ready(function() {
+			$('.questionToolbar').scrollToFixed({
+				marginTop: $('nav').outerHeight() - 1,
+				zIndex: 1,
+				preFixed: function() {
+					$(this).toggleClass('questionToolbarSticky');
+					$(this).css('width', '100.1%');
+				},
+				postFixed: function() {
+					$(this).toggleClass('questionToolbarSticky');
+				}
+			});
+		});
+	}
+
+	// Create a list of topic names for validation
+	topicList = [];
+	{% for topic in topics %}
+		topicList.push('{{ topic.name|lower|safeJavascript }}');
+	{% endfor %}
+</script>
+{% endblock %}

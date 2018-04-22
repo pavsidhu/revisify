@@ -1,0 +1,40 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Edit My Details{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fm.selectator.jquery.css') }}">
+{% endblock %}
+
+{% block content %}
+<section>
+
+  <h1>Edit My Details</h1>
+
+  <form method="POST" id="userInfoForm">
+    {{ userDetailsForm.hidden_tag() }}
+
+    {{ userDetailsForm.name(placeholder='Your name', class='textBox', maxlength='100', autocomplete="off") }}
+    {{ userDetailsForm.education(placeholder='Your place of education', class='textBox', maxlength='100', autocomplete="off") }}
+    {{ userDetailsForm.location(placeholder='Your location', class='textBox') }}
+
+    {% for error in userDetailsForm.location.errors %}
+      <p class="errorText">{{ error }}</p>
+    {% endfor %}
+
+    {% for error in userDetailsForm.education.errors %}
+      <p class="errorText">{{ error }}</p>
+    {% endfor %}
+
+    <button onclick="$('#userInfoForm').submit()">Save</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{{ url_for('static', filename='js/fm.selectator.jquery.min.js') }}"></script>
+  <script>
+    $('select').selectator({
+      useSearch: false
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,13 @@
+User-Agent: *
+Allow: /$
+Allow: /welcome
+Allow: /sign-in
+Allow: /contact
+Allow: /forgot-password
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: */topics$
+Allow: */overview$
+Allow: */test$
+Allow: */practice$
+Sitemap: http://www.revisify.com/sitemap.xml

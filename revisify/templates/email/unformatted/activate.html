@@ -1,0 +1,24 @@
+{% extends "email/unformatted/template.html" %}
+{% block body %}
+<tr>
+  <td>
+    <br>
+    <h3>Hi {{ name }},</h3>
+    <p>You're almost ready to start studying. Please confirm your email with the button below.</p>
+    <table class="btn-primary" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td align="center" bgcolor="#C21E5C" valign="top">
+          <a href="{{ url }}">Confirm Your Email</a>
+        </td>
+      </tr>
+    </table>
+<br>
+
+<h2>Stay up to Date</h2>
+<p>Receive the latest news and study tips by <a href="http://facebook.com/revisify">liking Revisify on Facebook.</a> and <a href="http://twitter.com/revisify">following @Revisify on Twitter.</a></p>
+
+<p>Thanks,<br>
+The Revisify Team.</p>
+</td>
+</tr>
+{% endblock %}

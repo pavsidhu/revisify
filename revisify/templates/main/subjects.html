@@ -1,0 +1,202 @@
+{% extends "default.html" %}
+{% block title %}Revisify{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Your Subjects</h1>
+
+	<div class="row limitRowWidth">
+
+		<div class="small-12 large-9 column">
+			<div class="columnContainer">
+
+				{% if not subjectList %}
+					<div class="noContent" style="display: none;">
+
+						<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-3">
+							{% for number in range(6) %}
+								<li class="circleIcon">
+									<svg viewBox="0 0 100 100">
+										<circle cx="50" cy="50" r="48"/>
+									</svg>
+								</li>
+							{% endfor %}
+						</ul>
+
+						<h2>You have not yet added any subjects.</h2>
+					</div>
+				{% endif %}
+
+				<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-3">
+
+					{% for subject in subjectList %}
+						{{ circleIcon(subject) }}
+					{% endfor %}
+
+					<li class="circleIcon add">
+						<a href="{{ url_for('subject.new') }}">
+							<svg viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="45" stroke-width="2"/>
+								<text class="unselectable" y=72>
+									<tspan x=50 text-anchor="middle">+</tspan>
+								</text>
+							</svg>
+							<p class="unselectable">Add a New Subject</p>
+						</a>
+					</li>
+
+				</ul>
+
+				{{ advert() }}
+			</div>
+		</div>
+
+		<div class="small-12 large-3 column">
+			<div class="columnContainer">
+				<h2>Weekly Goal</h2>
+
+				<div class="weeklyGoal">
+					<svg class="weeklyGoalChart" viewbox="0 0 200 200">
+					  <circle class="weeklyGoalChartBackdrop" r="80" cy="100" cx="100" stroke-width="32" stroke="#1e272b" fill="none"/>
+						<circle class="weeklyGoalChartProgress" r="80" cy="100" cx="100" stroke-width="32" stroke="#c2185b" fill="none"/>
+						<text>
+							<tspan class="weeklyGoalFraction" x=100 y=100 text-anchor="middle">
+								{% if weeklyGoal %}
+									{{ weeklyGoal.progress }}/{{ current_user.weeklyGoal }}</tspan>
+								{% else %}
+									0/{{ current_user.weeklyGoal }}</tspan>
+								{% endif %}
+							<tspan class="weeklyGoalDescription" x=100 y=136 text-anchor="middle">Topics</tspan>
+						</text>
+					</svg>
+
+					<div class="columnContainerBottom">
+						<a href="{{ url_for('account.aboutWeeklGoal') }}">
+							<svg class="columnContainerBottomLeft" viewBox="0 0 54 100.2">
+								<circle cx="28.8" cy="14" r="14"/>
+								<polygon points="43,86.2 43,37.2 34,37.2 15,37.2 0,37.2 0,51.2 15,51.2 15,86.2 0,86.2 0,100.2 15,100.2 20,100.2 34,100.2 43,100.2 54,100.2 54,86.2 "/>
+							</svg>
+						</a>
+
+						<a href="{{ url_for('account.editWeeklGoal') }}">
+							<svg class="columnContainerBottomRight" viewBox="0 0 369.8 362.3">
+								<path d="M320.8,136.7l-1.8-0.6l-6.9-16.4l0.7-1.7c20.8-47.2,19.4-48.6,15.9-52l-27.8-27.1c-1.1-1.1-3.1-1.9-4.8-1.9
+									c-1.6,0-6.3,0-47.3,18.6l-1.6,0.7l-16.9-6.8l-0.7-1.7C210.4,0,208.5,0,203.7,0h-39.2c-4.8,0-7,0-24.8,47.8l-0.7,1.7l-16.8,6.9
+									l-1.6-0.7c-27.8-11.7-44-17.6-48.2-17.6c-1.7,0-3.7,0.8-4.9,1.9L39.7,67.2c-3.5,3.5-5,4.9,16.9,51.1l0.8,1.7l-6.9,16.4l-1.7,0.7
+									C0,156,0,157.8,0,162.7v38.4c0,4.9,0,7,49,24.5l1.8,0.6l6.9,16.3l-0.7,1.7c-20.8,47.2-19.5,48.5-15.9,52l27.7,27.1
+									c1.2,1.1,3.2,1.9,4.9,1.9c1.6,0,6.3,0,47.3-18.6l1.6-0.8l16.9,6.8l0.7,1.7c19.3,47.7,21.3,47.7,26.1,47.7h39.2
+									c4.9,0,7,0,24.9-47.9l0.7-1.7l16.9-6.8l1.6,0.7c27.7,11.7,43.9,17.7,48.1,17.7c1.7,0,3.7-0.7,4.9-1.9l27.8-27.2
+									c3.5-3.5,5-4.9-17-51.1l-0.8-1.7l6.9-16.3l1.6-0.6c48.9-19,48.9-20.8,48.9-25.8v-38.4C369.8,156.2,369.8,154.2,320.8,136.7z
+									M184.9,243.4c-35,0-63.5-28-63.5-62.3c0-34.3,28.5-62.3,63.5-62.3c35,0,63.5,27.9,63.5,62.3
+									C248.4,215.5,219.9,243.4,184.9,243.4z"/>
+							</svg>
+						</a>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="columnContainer">
+				<h2>Study Streak</h2>
+
+				<div class="studyStreak">
+					<svg viewbox="0 0 100 50">
+						<g>
+							<circle cx="30" cy="20" r="20"/>
+							<text>
+								<tspan x="31" y="23" font-size="22" text-anchor="middle" class="studyStreakCount"></tspan>
+								<tspan x="30" y="33" font-size="8" text-anchor="middle">Days</tspan>
+							</text>
+						</g>
+
+						<text>
+							<tspan x="72" y="23" font-size="22" text-anchor="middle" class="studyStreakTimeLeft"></tspan>
+							<tspan x="71" y="33" font-size="7" text-anchor="middle" class="timeScale"></tspan>
+							<tspan x="70" y="40" font-size="7" text-anchor="middle">Left</tspan>
+						</text>
+
+					</svg>
+				</div>
+
+			</div>
+
+			<div class="columnContainer peopleYouFollow" style="clear: both;">
+
+					<h2>People You Follow</h2>
+
+					{% if following %}
+						<div class="peopleYouFollowUsers scrollBar">
+						{% for user in following %}
+							<a href="{{ url_for('social.user', hash=user.hash) }}">
+								<div class="searchItem">
+
+									<div class="searchItemIcon" style="background-image: url('{{ user['icon']['270'] }}');">
+									</div>
+
+									<div class="searchItemText">
+										<span class="searchItemTextTitle">{{ user.name }}</span>
+									</div>
+
+								</div>
+							</a>
+						{% endfor %}
+						</div>
+					{% else %}
+						<p></p>
+					{% endif %}
+
+			</div>
+		</div>
+
+	</div>
+
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	// Change formatting of study streak text
+	moment.updateLocale('en', {
+		relativeTime: {
+			future: '%s',
+			s: '%d <span class="momentTimeScale">Seconds</span>',
+			m: '%d <span class="momentTimeScale">Minute</span>',
+			mm: '%d <span class="momentTimeScale">Minute</span>',
+			mm: '%d <span class="momentTimeScale">Minutes</span>',
+			h: '%d <span class="momentTimeScale">Hour</span>',
+			hh: '%d <span class="momentTimeScale">Hours</span>',
+			d: '24 <span class="momentTimeScale">Hours</span>',
+		}
+	})
+
+	updateStudyStreak({{ studyStreakResults|safe }});
+
+	mobileDisplay() ? $('.peopleYouFollow p').html('Tap the search icon above to find your friends.') : $('.peopleYouFollow p').html('Use the search bar above to find your friends.');
+
+	{% if weeklyGoal %}
+		var circumference = 3.14159265359 * (2 * 80);
+		var dashoffset = circumference - ({{ weeklyGoal.progress / current_user.weeklyGoal }} * circumference)
+
+		{% if weeklyGoal.progress / current_user.weeklyGoal >= 1 %}
+			var dashoffset = 0
+		{% else %}
+			var dashoffset = circumference - ({{ weeklyGoal.progress / current_user.weeklyGoal }} * circumference)
+		{% endif %}
+
+		$('.weeklyGoalChartProgress').css('stroke-dashoffset', dashoffset);
+	{% endif %}
+
+	{% if current_user.weeklyGoal == 6 %}
+		$('.weeklyGoalPopupChoice[topic-goal="6"]').addClass('active');
+	{% elif current_user.weeklyGoal == 8 %}
+		$('.weeklyGoalPopupChoice[topic-goal="8"]').addClass('active');
+	{% elif current_user.weeklyGoal == 12 %}
+		$('.weeklyGoalPopupChoice[topic-goal="12"]').addClass('active');
+	{% elif current_user.weeklyGoal == 16 %}
+		$('.weeklyGoalPopupChoice[topic-goal="16"]').addClass('active');
+	{% else %}
+		$('.weeklyGoalPopupChoiceCustom').addClass('active');
+		$('.weeklyGoalPopupChoiceCustom p span').eq(0).html({{ current_user.weeklyGoal }});
+	{% endif %}
+</script>
+{% endblock %}

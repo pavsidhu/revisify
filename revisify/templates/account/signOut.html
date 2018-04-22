@@ -1,0 +1,10 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Sign Out{% endblock %}
+{% block content %}
+<section>
+	<h1>You have Signed Out</h1>
+	<p id="signOutDesktop">Study on the go with Revisify in your smartphone browser.</p>
+	<p id="signOutMobile">Get the best study experience by using Revisify on a desktop computer.</p>
+	<img data-interchange="[{{ url_for('static', filename='images/welcome/test-medium.png') }}, (small)], [{{ url_for('static', filename='images/sign-out-desktop.png') }}, (large)]" alt="devices preview" class="signOutImage">
+	</section>
+{% endblock %}

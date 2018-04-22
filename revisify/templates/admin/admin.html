@@ -1,0 +1,195 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Admin Panel{% endblock %}
+{% block content %}
+<section>
+	<h1>Admin Panel</h1>
+
+	<h2>Statistics</h2>
+	<div class="chart">
+		<canvas id="chart" width="600" height="400"></canvas>
+	</div>
+	<p>There are <span style="font-size: 1.3em; color: #BFCA33;">{{ users }}</span> users,
+		<span style="font-size: 1.3em; color: #C21E5C;">{{ subjects }}</span> subjects,
+		<span style="font-size: 1.3em; color: #0ABCD4;">{{ topics }}</span> topics,
+		<span style="font-size: 1.3em; color: #7CB342;">{{ questions }}</span> questions and
+		<span style="font-size: 1.3em; color: #FF5722;">{{ results }}</span> results</p>
+
+	{{ divider() }}
+
+	<h2>User Reports</h2>
+
+	{% if reports == 0 %}
+		<p>There are no reports!</p>
+	{% elif reports == 1 %}
+		<p>There is {{ reports }} report</p>
+	{% else %}
+		<p>There are {{ reports }} reports</p>
+	{% endif %}
+
+	{% if reports != 0 %}
+		{{ button('See Reports', url_for('admin.reports')) }}
+	{% endif %}
+
+	{{ divider() }}
+
+	<h2>Create Social Image</h2>
+	<form method="POST" id="createSocialImageForm">
+		<input type="text" name="title" class="textBox" placeholder="Enter a title" autocomplete="off">
+		<input type="text" name="text" class="textBox" placeholder="Enter a description" autocomplete="off">
+		<button type="button" onclick="createSocialImage()">Create</button>
+	</form>
+
+	{% if current_user.id == 1 %}
+
+		{{ divider() }}
+
+		<h2>Create Blog Post</h2>
+		<form class="hideInput" method="POST" action="{{ url_for('admin.newBlogPost') }}">
+			<input type="text" name="title" class="textBox" placeholder="Enter a title" autocomplete="off" maxlength="100">
+			<textarea name="blogpost" id="blogpost" class="textBox" placeholder="Enter your blog post" autocomplete="off" style="height: 200px;"></textarea>
+			<button onclick="submit()">Create</button>
+
+		</form>
+	{% endif %}
+
+	{{ divider() }}
+
+	<h2>Change Email Password</h2>
+	<form method="POST" action="{{ url_for('admin.changeEmailPassword') }}">
+		<input type="password" name="password" class="textBox" placeholder="Enter a password" autocomplete="off" maxlength="100">
+		<button type="button" onclick="submit()">Change</button>
+	</form>
+
+	{{ divider() }}
+
+	{% if current_user.id == 1 %}
+		<h2>Edit An Account</h2>
+		<form method="POST" id="editAccount">
+			<input type="email" name="email" class="textBox" placeholder="Enter an email address" autocomplete="off" maxlength="100">
+			<button type="button" onclick="AdminEditButton('{{ url_for('admin.add') }}')">Add Admin</button>
+			<button type="button" onclick="AdminEditButton('{{ url_for('admin.remove') }}')">Remove Admin</button>
+		</form>
+
+	{{ divider() }}
+
+	{% endif %}
+
+	{{ button('Enter Dev Website', 'http://dev.revisify.com/?id=8847FC148D4259A7BCFDD5348486A') }}
+
+
+</section>
+
+<div class="popupContainer">
+	<div class="popup" id="showSocialImage">
+		<svg onclick="hidePopup()" class="hidePopup" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+			<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+		</svg>
+		<h2>Social Image</h2>
+		<img src="" alt="Social image">
+	</div>
+</div>
+{{ flexible() }}
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin.min.js') }}"></script>
+<script>
+	var data = {
+	        labels: [
+						{% for date in dateList %}
+							"{{ date[0]|shortFormatDate }}",
+						{% endfor %}
+					],
+	        datasets: [
+	            {
+	              fillColor: "rgba(192, 202, 51, 0.3)",
+	              strokeColor: "#AFB42B",
+	              pointColor: "#C0CA33",
+	              pointStrokeColor: "#F9FBE7",
+	              data: [
+									{% for user in usersList %}
+										{{ user[0] }},
+									{% endfor %}
+								]
+	            },
+
+							{
+	              fillColor: "rgba(194, 24, 91, 0.3)",
+	              strokeColor: "#AD1457",
+	              pointColor: "#C2185B",
+	              pointStrokeColor: "#FCE4EC",
+	              data: [
+									{% for subject in subjectsList %}
+										{{ subject[0] }},
+									{% endfor %}
+								]
+	            },
+
+							{
+	              fillColor: "rgba(0, 188, 212, 0.3)",
+	              strokeColor: "#00ACC1",
+	              pointColor: "#00BCD4",
+	              pointStrokeColor: "#E0F7FA",
+	              data: [
+									{% for topic in topicsList %}
+										{{ topic[0] }},
+									{% endfor %}
+								]
+	            },
+
+							{
+	              fillColor: "rgba(124, 179, 66, 0.3)",
+	              strokeColor: "#689F38",
+	              pointColor: "#7CB342",
+	              pointStrokeColor: "#F1F8E9",
+	              data: [
+									{% for question in questionsList %}
+										{{ question[0] }},
+									{% endfor %}
+								]
+	            },
+
+							{
+	              fillColor: "rgba(255, 87, 34, 0.3)",
+	              strokeColor: "#D84315",
+	              pointColor: "#FF5722",
+	              pointStrokeColor: "#FBE9E7",
+	              data: [
+									{% for result in resultsList %}
+										{{ result[0] }},
+									{% endfor %}
+								]
+	            },
+	         ]
+	        }
+
+	var chart = document.getElementById('chart').getContext('2d');
+	var options = {
+		scaleFontFamily: "'Texta-Regular'",
+		scaleFontSize: 15,
+		scaleFontColor: "#90a4ae",
+		scaleShowGridLines: true,
+		scaleLineColor: "#cfd8dc",
+		scaleLineWidth: 2,
+		scaleShowGridLines: true,
+		scaleGridLineColor: "#cfd8dc",
+		scaleGridLineWidth: 0.2,
+
+		tooltipTitleFontColor: "#263238",
+		tooltipFontColor: "#263238",
+		tooltipTitleFontFamily: "'Texta-Regular'",
+		tooltipTitleFontSize: 20,
+		tooltipFontFamily: "'Texta-Regular'",
+		tooltipFontSize: 18,
+		tooltipFillColor: "#cfd8dc",
+		tooltipCornerRadius: 5,
+
+		responsive: true,
+		tooltipXPadding: 10,
+		tooltipYPadding: 10,
+		pointDotStrokeWidth: 7
+	}
+	new Chart(chart).Line(data, options);
+</script>
+{% endblock %}

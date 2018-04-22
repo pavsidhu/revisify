@@ -1,0 +1,26 @@
+{% extends "default.html" %}
+
+{% block title %}
+	{% if confirmed %}
+		Revisify - Email Confirmed
+	{% else %}
+		Revisify - Email Not Confirmed
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+<section>
+	{% if confirmed %}
+		<h1>Email Confirmation</h1>
+		<p>
+			Your email has successfully been confirmed.<br>
+			If you need to help with using Revisify check out our <a href="{{ url_for('help.quickStart') }}" class="underline">Quick Start Guide</a>.
+		</p>
+		{{ button('Home', '/') }}
+	{% else %}
+		<h1>There's Been a Mistake</h1>
+		<p>Your confirmation link has expired or the link is incorrect.</p>
+		{{ button('Resend Email', '/confirm') }}
+	{% endif %}
+</section>
+{% endblock %}

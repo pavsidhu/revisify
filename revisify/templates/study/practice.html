@@ -1,0 +1,67 @@
+{% extends "study/template.html" %}
+
+{% block title %}
+	Revisify - {{ topic.name }} Practice
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+	.reviewQuestion {
+		background-color: {{ navcolor }};
+		color: {{ textcolor }};
+	}
+
+	.reviewQuestion svg {
+		background-color: {{ textcolor }};
+		fill: {{ navcolor }};
+	}
+</style>
+{% endblock %}
+
+{% block studyBarBottomRight %}
+<p class="finishPractice hidden">
+	<svg viewBox="0 0 100 100">
+		<path d="M83.47,19.4h-23V16.5a8,8,0,0,0-8-8H21.75V6.75a6.6,6.6,0,1,0-13.21,0V93.46a6.6,6.6,0,1,0,13.21,0V54.93H42.93v2.94a8.14,8.14,0,0,0,8,8.22h32.5a8.27,8.27,0,0,0,8.2-8.22V27.59A8.24,8.24,0,0,0,83.47,19.4Z"/>
+	</svg>
+	Finish
+</p>
+{% endblock %}
+
+{% block results %}
+	<div class="row limitRowWidth">
+		<div class="small-12 column">
+			<div class="columnContainer reviewQuestions">
+				<h2>Review Your Questions</h2>
+
+				<div class="row reviewQuestionsContainer">
+
+					<div class="reviewQuestionsMore">
+					</div>
+				</div>
+
+				<p class="reviewQuestionsMoreShow"><span class="hidden">See All</span></p>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+<script>
+	// Get first question
+	changeQuestion(true, null, false);
+
+	$('.tick').click(function() {
+    changeQuestion(true, true, false);
+	});
+
+	$('.cross').click(function() {
+    changeQuestion(true, false, false);
+	});
+
+	$('.undoQuestion').click(function() {
+  	changeQuestion(true, null, true);
+	});
+</script>
+{% endblock %}

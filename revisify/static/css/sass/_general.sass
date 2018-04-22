@@ -1,0 +1,179 @@
+// main: main.sass
+
+@keyframes fadeIn
+  from
+    opacity: 0
+
+  to
+    opacity: 1
+
+@-webkit-keyframes fadeIn
+  from
+    opacity: 0
+
+  to
+    opacity: 1
+
+*
+  margin: 0
+  padding: 0
+
+body
+  font-size: 62.5%
+  background: $grey-3
+  overflow-x: hidden
+
+html, body
+  height: 100%
+
+#wrapper
+  position: relative
+  min-height: 100%
+
+#content
+  padding-bottom: 250px
+
+section
+  margin: 0 10px 3em
+  padding-top: 4em
+  -webkit-animation: fadeIn .2s
+  -moz-animation: fadeIn .2s
+  animation: fadeIn 0.2s
+
+  &:first-of-type
+    padding-top: 8em
+
+  &:last-of-type
+    padding-bottom: 0
+    margin-bottom: 0
+
+a
+  text-decoration: none
+  color: inherit
+
+.alignLeft, div.alignLeft *
+  text-align: left
+
+.row
+  max-width: none
+
+.overflowHidden
+  overflow: hidden
+
+.unclickable
+  pointer-events: none
+
+.unselectable
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+
+.underline
+  border-bottom: 1px solid
+  border-color: inherit
+
+b.underline, strong.underline
+  border-bottom: 2px solid
+  border-color: inherit
+
+li
+  // list-style: none
+  // list-style-position: inside
+
+svg.text
+  width: 1.3em
+  height: 1.3em
+  margin-right: 5px
+  position: relative
+  top: 7px
+  fill: $grey-2
+
+.noMarginTop
+  margin-top: 0
+
+.noMarginBottom
+  margin-bottom: 0
+
+.inline
+  display: inline !important
+
+.userIcon
+  height: 2.5em
+  width: 2.5em
+  border-radius: 50%
+  -webkit-border-radius: 50%
+
+textarea
+  line-height: 1.2em
+  overflow-y: auto
+  min-height: 60px
+  padding: 0.4em
+  word-wrap: break-word
+
+/* Button
+ **************************************************
+
+a:hover,
+a:hover *:not(button)
+  color: white
+
+// Needs removing
+.image
+  display: block
+  max-width: 80%
+  margin: 30px auto
+  border: 3px solid
+
+@media only screen and (min-width: $tablet)
+
+  section
+    margin: 0 40px
+    padding-top: 4em
+    padding-bottom: 4em
+
+    &:first-of-type
+      padding-top: 10em
+
+@media only screen and (min-width: $desktop)
+  section.narrowWidth, p.narrowWidth
+    width: 60%
+    margin-right: auto
+    margin-left: auto
+    max-width: 1000px
+
+  // Needs sorting
+  a h2:hover,
+  .subjectIcon:hover,
+  button:not(.followButton):hover,
+  .shareIcon:hover
+    cursor: pointer
+    filter: brightness(120%)
+    -webkit-filter: brightness(120%)
+    -ms-filter: brightness(120%)
+    -moz-filter: brightness(120%)
+    -o-filter: brightness(120%)
+
+  // Needs sorting
+  a h2:active,
+  .subjectIcon:active,
+  button:not(.followButton):active,
+  .shareIcon:active
+    cursor: pointer
+    filter: brightness(95%)
+    -webkit-filter: brightness(95%)
+    -ms-filter: brightness(95%)
+    -moz-filter: brightness(95%)
+    -o-filter: brightness(95%)
+
+@media print
+  body
+    background: none
+
+  h1, h2, h3, h4, h5, h6, p
+    color: black
+
+  #menu, .actionBar, footer, .popup, #addSubject, .subjectAction
+    display: none
+
+  nav
+     background: none

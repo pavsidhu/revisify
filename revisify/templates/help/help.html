@@ -1,0 +1,71 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Help Center{% endblock %}
+
+{% block content %}
+<section>
+
+	<h1>Help Center</h1>
+
+	<ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-2 supportColumns">
+
+		<li class="supportColumnLeft">
+
+			<h2 class="supportFirst">The Basics</h2>
+			{% for article in basics %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+			<h2>Subjects and Topics</h2>
+			{% for article in subjectsAndTopics %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+			<h2>Studying</h2>
+			{% for article in studying %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+		</li>
+
+		<li class="supportColumnRight">
+			<h2>Gamification</h2>
+			{% for article in gamification %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+			<h2 class="supportFirst">Your Account</h2>
+			{% for article in yourAccount %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+			<h2>Social</h2>
+			{% for article in socialHelp %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+			<h2>Other</h2>
+			{% for article in other %}
+				<p>
+					<a href="{{ url_for('help.article', slug=article.slug) }}">{{ article.title }}</a>
+				</p>
+			{% endfor %}
+
+		</li>
+
+	</ul>
+
+	<p>Can't find what your looking for? <a href="{{ url_for('footer.contact') }}" class="underline">Send us a message.</a></p>
+
+</section>
+{% endblock %}

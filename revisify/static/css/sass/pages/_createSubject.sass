@@ -1,0 +1,31 @@
+// main: ../main.sass
+
+.subjectColorList li
+  padding: 0
+  list-style: none
+
+.subjectColor
+  display: inline-block
+  box-sizing: border-box
+  width: 80%
+  margin: 0 0 8px
+  padding-bottom: 80%
+  cursor: pointer
+  border-radius: 50%
+
+.subjectColors
+  width: 70%
+  margin: 50px auto auto
+
+
+@media only screen and (min-width: $tablet)
+  .subjectColor
+    margin-bottom: 15px
+
+  .subjectColors
+    width: 70%
+
+@media only screen and (min-width: $desktop)
+  .subjectColors
+    width: 45%
+    max-width: 450px

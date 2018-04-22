@@ -1,0 +1,127 @@
+{% extends "default.html" %}
+
+{% block title %}
+	{% if edit %}
+		Revisify - Edit Subject
+	{% else %}
+		Revisify - New Subject
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+<section>
+	{% if edit %}
+		<h1>Edit Subject</h1>
+	{% else %}
+		<h1>Create a New Subject</h1>
+	{% endif %}
+
+	<form method="POST" class="hideInput">
+		{{ form.hidden_tag() }}
+
+		{% if edit %}
+			{{ form.oldName(value=subject.name, style="display: none;") }}
+		{% endif %}
+
+		{% if edit %}
+		{{ form.name(placeholder='Enter a subject name', id="subjectName", class="textBox", maxlength="100", autocomplete="off", autofocus="autofocus", value=subject.name) }}
+		{% else %}
+		{{ form.name(placeholder='Enter a subject name', id="subjectName", class="textBox", maxlength="100", autocomplete="off", autofocus="autofocus") }}
+		{% endif %}
+
+		{% for error in form.name.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{% for color in form.color %}
+			{{ color }}
+		{% endfor %}
+
+		<div class="subjectColors">
+			<h2>Choose a colour:</h2>
+
+			<ul class="small-block-grid-5 subjectColorList">
+				<li>
+					<label for="color-0">
+						<div alt="Red" id="Red" onclick="outline(0)" class="subjectColor" style="background-color: #C62828;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-1">
+						<div alt="Pink" id="Pink" onclick="outline(1)" class="subjectColor" style="background-color: #C2185B;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-2">
+						<div alt="Purple" id="Purple" onclick="outline(2)" class="subjectColor" style="background-color: #5E35B1;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-3">
+						<div alt="Blue" id="Blue" onclick="outline(3)" class="subjectColor" style="background-color: #1976D2;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-4">
+						<div alt="Cyan" id="Cyan" onclick="outline(4)" class="subjectColor" style="background-color: #00BCD4;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-5">
+						<div alt="Teal" id="Teal" onclick="outline(5)" class="subjectColor" style="background-color: #009688;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-6">
+						<div alt="Green" id="Green" onclick="outline(6)" class="subjectColor" style="background-color: #7CB342;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-7">
+						<div alt="Lime" id="Lime" onclick="outline(7)" class="subjectColor" style="background-color: #C0CA33;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-8">
+						<div alt="Orange" id="Orange" onclick="outline(8)" class="subjectColor" style="background-color: #FF5722;"></div>
+					</label>
+				</li>
+
+				<li>
+					<label for="color-9">
+						<div alt="Brown" id="Brown" onclick="outline(9)" class="subjectColor" style="background-color: #6D4C41;"></div>
+					</label>
+				</li>
+			</ul>
+		</div>
+
+		{{ advert() }}
+
+		{% if edit %}
+			<button onclick="submit()">Save</button>
+		{% else %}
+			<button onclick="submit()">Create</button>
+		{% endif %}
+	</form>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	{% if edit %}
+		outline({{ color }});
+		document.getElementById('color-{{ color }}').checked = true;
+	{% else %}
+		outline(0);
+		document.getElementById('color-0').checked = true;
+	{% endif %}
+</script>
+{% endblock %}

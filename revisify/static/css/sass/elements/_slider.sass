@@ -1,0 +1,80 @@
+// main: ../main.sass
+
+input[type=range]
+    // removes default webkit styles
+    -webkit-appearance: none
+
+    //required for proper track sizing in FF
+    width: 200px
+
+    &::-webkit-slider-runnable-track
+      width: 200px
+      height: 12px
+      border: none
+      border-radius: 3px
+
+    &::-webkit-slider-thumb
+      -webkit-appearance: none
+      border: none
+      height: 25px
+      width: 25px
+      border-radius: 5px
+      background: $grey-2
+      margin-top: -7px
+
+    &:focus
+      outline: none
+
+    &::-moz-range-track
+      width: 200px
+      height: 12px
+      border: none
+      border-radius: 3px
+
+    &::-moz-range-thumb
+      border: none
+      height: 25px
+      width: 25px
+      border-radius: 5px
+      background: $grey-2
+      margin-top: -6px
+
+    &:-moz-focusring
+      outline: 1px solid white
+      outline-offset: -1px
+
+    &::-ms-track
+      width: 200px
+      height: 12px
+
+      /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead
+      background: transparent
+
+      /*leave room for the larger thumb to overflow with a transparent border
+      border-color: transparent
+      border-width: 6px 0
+
+      /*remove default tick marks
+      color: transparent
+
+    &::-ms-fill-lower
+      background: #777
+      border-radius: 10px
+
+    &::-ms-fill-upper
+      border-radius: 10px
+
+    &::-ms-thumb
+      border: none
+      height: 25px
+      width: 25px
+      border-radius: 5px
+      background: $grey-2
+      margin-top: -6px
+
+    &:focus
+      &::-ms-fill-lower
+        background: #888
+
+      &::-ms-fill-upper
+        background: #ccc

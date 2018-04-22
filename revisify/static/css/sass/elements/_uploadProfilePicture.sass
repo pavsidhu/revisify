@@ -1,0 +1,62 @@
+// main: ../main.sass
+
+.cropit-image-preview
+  background-color: #f8f8f8
+  background-size: cover
+  border-radius: 50%
+  margin: 0 auto
+  width: 200px
+  height: 200px
+  cursor: pointer
+
+  p
+    font-size: 45px
+    position: relative
+    top: -135px
+    color: $grey-3
+    margin: 0
+
+.cropit-image-preview-overlay
+  width: 100%
+  height: 100%
+  border-radius: 50%
+  background-image: url('/static/images/imagePreviewOverlay.png')
+  background-color: black
+  background-size: contain
+
+.cropit-image-change
+  display: none
+
+  span
+    cursor: pointer
+
+.cropit-zoom-container
+  text-align: center
+  margin-top: 30px
+  display: none
+
+.zoomIcon
+  display: inline
+  vertical-align: middle
+
+  &.zoomIconSmall
+    width: 2.4em
+    height: 2.4em
+
+  &.zoomIconLarge
+    width: 3.4em
+    height: 3.4em
+
+.cropit-image-zoom-input
+  display: inline
+  vertical-align: middle
+  margin: 0 10px
+
+@media only screen and (min-width: $tablet)
+  .cropit-image-preview
+    width: 250px
+    height: 250px
+
+    p
+      font-size: 50px
+      top: -165px

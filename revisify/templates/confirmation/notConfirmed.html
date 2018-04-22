@@ -1,0 +1,13 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Confirmation{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Almost There!</h1>
+	<p>Please check your inbox or junk folder to confirm your email.</p>
+	<p>If you didn't receive an email, click the button below to resend one.</p>
+	<a href="{{ url_for('confirmation.resend') }}">
+		<button>Resend</button>
+	</a>
+</section>
+{% endblock %}

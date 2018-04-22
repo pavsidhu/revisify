@@ -1,0 +1,84 @@
+// main: ../main.sass
+
+button.signInSocial
+  width: 90%
+  max-width: 280px
+  font-size: 2.2em
+  line-height: 1.5
+  margin: 0
+
+  &.signInFacebook
+    margin-top: 1em
+
+.signInGoogle
+  background-color: #dd4b39
+  color: white
+
+.signInFacebook
+  background-color: #3b5998
+  color: white
+
+.signInDivider
+  text-align: center
+  background: linear-gradient(transparent 52%, $grey-1 52.1%, $grey-1 61.9%, transparent 62%)
+  width: 90%
+  margin: 30px auto
+  max-width: 280px
+
+  p
+    font-size: 3em
+    background-color: $grey-3
+    width: 14%
+    margin: 0 auto
+    line-height: 1
+    color: $grey-1
+
+.signInForm #password
+  margin-bottom: 0
+
+  + p
+    margin: 5px auto 25px
+    font-size: 2em
+    width: 90%
+    text-align: right
+
+p.smallText
+  font-size: 1.5em
+  width: 80%
+  margin: 15px auto
+
+.forgotPassword
+  font-size: 2.2em
+
+@media only screen and (min-width: $tablet)
+  button.signInSocial
+    font-size: 2.5em
+    max-width: 320px
+
+
+  .signInDivider
+    width: 70%
+    max-width: none
+    margin: 40px auto
+
+    p
+      width: 10%
+
+  .signInForm #password + p
+    width: 70%
+
+  p.smallText
+    font-size: 1.8em
+    width: 70%
+
+@media only screen and (min-width: $desktop)
+  .signInDivider
+    width: 50%
+    max-width: 800px
+
+    p
+      width: 8%
+
+  .signInForm #password + p
+    width: 50%
+    max-width: 800px

@@ -1,0 +1,18 @@
+{% extends "email/unformatted/template.html" %}
+{% block body %}
+<tr>
+  <td>
+    <br>
+    <h3>Hi {{ name }},</h3>
+
+    <p>It has come to our attention that your account has been violating Revisify's <a href="http://revisify.com/terms-of-service">Terms of Service</a>.</p>
+    <p>{{ reason }}</p>
+
+    <p>The content we found to be inappropriate has been removed. Please be aware that in the event of another violation, your account will be suspended.</p>
+    <p>If you believe our decision is an error, please <a href="http://revisify.com/contact">contact us</a>.</p>
+
+		<p>Thanks,<br>
+		Revisify.</p>
+  </td>
+</tr>
+{% endblock %}

@@ -1,0 +1,26 @@
+// main: ../main.sass
+
+.circleUserIcon
+  display: block
+  margin: 0 auto 10px
+  border-radius: 50%
+  width: 44vw
+  max-width: 220px
+  height: 44vw
+  max-height: 220px
+  background-color: $grey-2
+  cursor: pointer
+
+  ~ p
+    margin-top: 0
+    font-size: 2em
+
+@media only screen and (min-width: $desktop)
+  .circleUserIcon
+    width: 44vw
+    max-width: 250px
+    height: 44vw
+    max-height: 250px
+
+    ~ p
+      font-size: 2.8em

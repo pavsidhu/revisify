@@ -1,0 +1,179 @@
+{% extends "default.html" %}
+
+{% block head %}
+<meta name="description" content="Study {{ topic.name }} by {{ topic.user.name }} on Revisify.">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/zoom.css') }}"/>
+<style>
+	#content {
+		padding-bottom: 0;
+	}
+
+	footer {
+		display: none;
+	}
+
+	.answerContainer .answer {
+		color: {{ textcolor }};
+	}
+
+	.question a,
+	.answer a {
+	  border-bottom: 3px solid {{ textcolor }};
+	}
+
+	.tickCrossContainer div {
+		fill: {{ textcolor }};
+		background-color: {{ iconcolor }};
+	}
+
+	.studyBottomBar p {
+		background-color: {{ textcolor }};
+		color: {{ navcolor }};
+	}
+
+	.studyBottomBar svg {
+		fill: {{ navcolor }};
+	}
+
+	.resultButtons button {
+		fill: {{ bgcolor }};
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="studyPage">
+	<h1 class="question"></h1>
+	<button class="answerButton">Show Answer</button>
+
+	<div class="row answerContainer">
+		<div class="small-12 column">
+			<div class="columnContainer">
+				<div class="answer"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tickCrossContainer">
+			<div class="cross">
+				<svg viewBox="0 0 300 300">
+					<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+				</svg>
+			</div>
+
+			<div class="tick">
+				<svg viewBox="0 0 300 300">
+					<path d="M297.4,70.8l-35.4-35.4c-3.5-3.5-9.2-3.5-12.7,0L143.8,140.8l-33.8,33.8l-12.8-12.8l-46.3-46.3c-3.5-3.5-9.2-3.5-12.7,0L2.6,150.9c-3.5,3.5-3.5,9.2,0,12.7l100.9,100.9c3.5,3.5,9.2,3.5,12.7,0l181-181C300.9,80.1,300.9,74.3,297.4,70.8z"/>
+				</svg>
+			</div>
+	</div>
+
+	{{ advert() }}
+</section>
+
+<div class="studyBottomBar">
+	<div class="studyBottomBarLeft">
+		<p class="undoQuestion hidden">
+			<svg viewBox="0 0 100 100">
+				<path d="M51.87.21,18.47,19.48a1.52,1.52,0,0,0,0,2.63l33.4,19.28a1.51,1.51,0,0,0,2.27-1.31V30.24A26.29,26.29,0,1,1,23.62,57.6a1.5,1.5,0,0,0-1.51-1.4H7.56a1.51,1.51,0,0,0-1.48,1.54A43.76,43.76,0,0,0,49.87,100h1.62a43.82,43.82,0,0,0,2.65-87.43v-11h0A1.52,1.52,0,0,0,52.62,0,1.5,1.5,0,0,0,51.87.21Z"/>
+			</svg>
+			Undo
+		</p>
+
+		{% block studyBarBottomLeft %}
+		{% endblock %}
+	</div>
+
+	<div class="studyBottomBarRight">
+		{% block studyBarBottomRight %}
+		{% endblock %}
+	</div>
+</div>
+
+<section class="resultsPage hidden">
+	<h1 class="noMarginBottom"></h1>
+	<p class="noMarginTop resultPercentage">You scored a percentage of </p>
+
+	<!-- {% if current_user.is_anonymous() %}
+		<p>If you would like to save your progress or create your own topics, <a href="{{ url_for('account.register') }}" class="underline">create an account</a>.</p>
+	{% else %}
+		{% block results %}
+		{% endblock %}
+	{% endif %} -->
+
+	{{ advert() }}
+
+	<div class="resultButtons">
+		{{ button('
+			<svg viewBox="0 0 100 100">
+				<path d="M47.38,0a1.52,1.52,0,0,0-1.52,1.52h0v11A43.82,43.82,0,0,0,48.51,100h1.62A43.76,43.76,0,0,0,93.92,57.74a1.51,1.51,0,0,0-1.48-1.54H77.89a1.5,1.5,0,0,0-1.51,1.4A26.29,26.29,0,1,1,45.86,30.24v9.84a1.51,1.51,0,0,0,2.27,1.31l33.4-19.28a1.52,1.52,0,0,0,0-2.63L48.13.21A1.5,1.5,0,0,0,47.38,0Z"/>
+			</svg>
+			Retry
+		', url_for('study.' + mode, hash=topic.hash, subjectSlug=topic.subject.slug, topicSlug=topic.slug)) }}
+
+		{{ button('
+			<svg viewBox="0 0 100 100">
+				<path d="M85.15,0h-66a2,2,0,0,0-2,2V19.53H34.37v8.89H17.15V45.56H34.37v8.89H17.15V71.58H34.37v8.89H17.15V98a2,2,0,0,0,2,2h66a2,2,0,0,0,2-2V2A2,2,0,0,0,85.15,0Zm-8.3,32.54H51.39V15.4H76.85Z"/>
+			</svg>
+			Back to Subject
+		', url_for('subject.subjectList', hash=topic.subject.hash, slug=topic.subject.slug)) }}
+
+		{{ button('
+			<svg viewBox="0 0 100 100">
+				<path d="M87.24,40.94,51.49.68a2,2,0,0,0-3,0L12.76,40.94A2.36,2.36,0,0,0,12,42.28V98c0,1.12,1.4,2,2.5,2h22c1.1,0,1.5-.9,1.5-2V69.14A2.6,2.6,0,0,1,40.5,67h19A2.6,2.6,0,0,1,62,69.14V98c0,1.12.4,2,1.5,2h22c1.1,0,2.5-.9,2.5-2V42.28A2.36,2.36,0,0,0,87.24,40.94Z"/>
+			</svg>
+			Home
+		', url_for('main.index')) }}
+	</div>
+
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/mousetrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/transition.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script>
+	// Confirm page leave
+	window.onbeforeunload = function() {
+		if (question > 1) {
+			return 'Do you want to finish your topic before you leave?';
+		}
+	};
+
+	number = 0;
+	questionHistory = [];
+	studyFinished = false;
+
+	questions = [];
+	{% for question in topic.questions %}
+		questions.push({
+			question: $.parseHTML('{{ question.question|safeJavascript|safe }}'),
+			answer: $.parseHTML('{{ question.answer|safeJavascript|safe }}')
+		});
+	{% endfor %}
+
+	Mousetrap.bind('a', function() {
+		if (!studyFinished) {
+			$('.answerButton').click();
+		}
+	});
+	Mousetrap.bind('u', function() {
+		if (!studyFinished) {
+			$('.undoQuestion').click();
+		}
+	}, 'keyup');
+	Mousetrap.bind('x', function() {
+		if (!studyFinished) {
+			$('.cross').click();
+		}
+	}, 'keyup');
+	Mousetrap.bind('c', function() {
+		if (!studyFinished) {
+			$('.tick').click();
+		}
+	}, 'keyup');
+</script>
+{% endblock %}

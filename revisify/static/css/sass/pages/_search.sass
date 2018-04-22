@@ -1,0 +1,81 @@
+// main: ../main.sass
+
+.searchResults h2:first-of-type, .searchResultsTopics, .searchResultsPeople
+  display: none
+
+.searchItem
+  display: -webkit-flex
+  display: -ms-flex
+  display: flex
+  width: 100%
+  font-size: 2.2em
+  font-family: 'Texta-Regular', sans-serif
+  color: $grey-1
+  cursor: pointer
+  margin: 1em 0
+  align-items: center
+
+
+  .searchItemIcon
+    display: -webkit-flex
+    display: -ms-flex
+    display: flex
+    font-size: 2.3em
+    border-radius: 50%
+    margin-right: 0.2em
+    align-content: center
+    align-items: center
+    justify-content: center
+    min-width: 1.5em
+    height: 1.5em
+    background-size: contain
+
+  .searchItemText
+    display: -webkit-flex
+    display: -ms-flex
+    display: flex
+    flex-direction: column
+    font-size: 1.1em
+    line-height: 1.3em
+    min-width: 0
+
+    .searchItemTextTitle
+      margin-bottom: 0.2em
+      word-wrap: break-word
+
+    .searchItemTextSubtitle
+      display: -webkit-flex
+      display: -ms-flex
+      display: flex
+      align-items: center
+
+      span
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+      img
+        border-radius: 50%
+        width: 1.3em
+        height: 1.3em
+        margin-right: 0.3em
+
+
+@media only screen and (min-width: $tablet)
+  .searchToggle
+    max-width: 450px
+
+@media only screen and (min-width: $desktop)
+  .searchToggle
+    display: none
+
+  .searchResults
+    h2:first-of-type, .column
+      display: block
+
+  .searchItem
+    font-size: 2em
+    padding: 0.5em 0.2em
+
+    &:hover
+      background-color: $grey-4

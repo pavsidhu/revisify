@@ -1,0 +1,371 @@
+// main: ../main.sass
+
+// Topic overview page
+.topicOverview
+  #sendTopicForm
+    input.topicName
+      display: none
+
+  .topicOverviewFirstRow
+    .column
+      transition: all 700ms
+
+      &.studyMode
+        transition: transform 150ms
+
+        .studyModeMain
+          text-align: center
+
+          button
+            display: inline
+            margin: 0 1.5%
+            width: 44%
+            font-size: 2em
+            text-align: center
+
+            svg
+              height: 60px
+              width: 60px
+              display: block
+              margin: 0 auto 10px
+
+        .studyModeInfo
+          display: none
+
+      .progressChart
+        width: 90%
+        margin: 0 auto
+
+        *
+          width: 100%
+
+// Create new topic page
+.topicCreate
+  #sendTopicForm
+    input.topicName
+      display: block
+
+#sendTopicForm
+  textarea
+    display: none
+
+  input.topicName
+    margin-bottom: 0em
+    width: 95%
+
+.questionToolbar
+  padding: 1.1em 0
+  position: fixed
+  left: 0
+  bottom: 0
+  width: 100%
+  z-index: 100
+  border-top: 2px solid
+  display: none
+
+  svg
+    height: 3em
+    width: 3em
+    margin: 0 0.6em
+    transition: fill 100ms
+
+  .toolbar
+    display: none
+    text-align: center
+
+    &.dummyToolbar
+      display: block
+
+  .toolbarDialog
+    margin-top: 10px
+    font-size: 0.9em
+
+    input
+      display: inline
+      width: 60%
+      max-width: 500px
+      margin-top: 0
+      margin-bottom: 0
+      font-size: 2em
+
+  .saveTopicContainer
+    display: none
+
+  // Class toggled when .questionToolbar is sticky
+  &.questionToolbarSticky
+    width: 100.1%
+
+
+.editor
+  &:nth-child(1)
+    .questionBar
+      margin-top: 0
+
+  .questionBar
+    margin: 10px auto
+    width: 98%
+
+    li
+      padding: 0
+
+    .questionNumber
+      margin: 0
+      float: left
+      font-size: 2.8em
+
+    .questionSortHandle
+      cursor: grab
+      cursor: -webkit-grab
+      cursor: -moz-grab
+      float: left
+      margin-right: 1.5em
+
+      &:active
+        cursor: grabbing
+        cursor: -webkit-grabbing
+        cursor: -moz-grabbing
+
+    svg
+      width: 2.1em
+      height: 2.1em
+      margin-top: 1em
+      cursor: pointer
+
+      &.addQuestion
+        margin-left: auto
+        margin-right: auto
+        display: block
+
+    .deleteQuestionContainer
+      text-align: right
+
+  .topicText
+    width: 100%
+    font-family: 'Texta-Regular', sans-serif
+    height: auto
+    min-height: 4.5em
+    margin: 5px auto
+    padding: 5px 10px
+    font-size: 1.3rem
+    text-align: left
+    border: none
+
+    /* The border radius below removes the rounded edges in Safari
+    border-radius: 0
+    resize: none
+    outline: none
+    -webkit-user-select: text
+    -moz-user-select: text
+    -ms-user-select: text
+    user-select: text
+
+    li
+      margin-left: 0
+      list-style: inside
+
+    ul
+      li
+        margin-left: 25px
+        list-style: inherit
+
+    a
+      border-bottom: 2px solid
+
+    img
+      margin: 10px 0
+      width: 100%
+      display: block
+
+    // Grey out placeholder text
+    &:empty:before
+      color: #9E9E9E
+      display: block
+
+    &.questionTopicText[contenteditable="true"]:empty:before
+        content: "Enter your question"
+
+    &.answerTopicText
+      &[contenteditable="false"]:empty:before
+        content: "No answer has been added"
+
+      &[contenteditable="true"]:empty:before
+        content: "Enter you answer"
+
+// Shadow for drop position when question is being dragged
+.editorSortPlaceholder
+  *
+    opacity: 0
+
+.addQuestionButton
+  line-height: 50px
+  clear: both
+  width: 100%
+  min-height: 50px
+  margin: 2% auto
+  cursor: pointer
+
+.saveTopic
+  margin-bottom: 0
+
+@media only screen and (min-width: $tablet)
+  .topicOverview
+    .topicOverviewFirstRow
+      .column
+        &.studyMode
+          .studyModeMain
+            .studyModeChoices
+              button
+                margin: 0 1.5%
+                width: 25%
+                max-width: 180px
+
+            // Left side
+            a:nth-child(odd)
+              button
+                margin-left: 0
+
+            // Right side
+            a:nth-child(even)
+              button
+                margin-right: 0
+
+        .progressChart
+          width: 70%
+          max-width: 500px
+
+  #sendTopicForm
+    input.topicName
+      width: 85%
+
+  .questionToolbar
+    padding-left: 5em
+    padding-right: 5em
+
+    svg:first-child
+      margin-left: 0
+
+  .editor
+    .topicText
+      min-height: 5em
+      font-size: 1.15rem
+
+@media only screen and (min-width: $desktop)
+  .topicOverview
+    .topicOverviewFirstRow
+      flex: 1
+      display: -webkit-flex
+      display: -ms-flex
+      display: flex
+
+      .column
+        flex: 1
+        display: -webkit-flex
+        display: -ms-flex
+        display: flex
+
+        .columnContainer
+          flex: 1
+
+        &.studyMode
+          .studyModeMain
+            .studyModeChoices
+              margin-bottom: 40px
+
+              button
+                font-size: 2.5em
+                width: 65%
+                padding-left: 0
+                padding-right: 0
+
+                svg
+                  height: 90px
+                  width: 90px
+
+            .columnContainerBottom
+              position: absolute
+              bottom: 0
+              margin-top: 0
+              margin-bottom: 2em
+
+        .progressChart
+          width: 80%
+
+  #sendTopicForm
+    margin-bottom: 2em
+
+    input.topicName
+      width: 65%
+
+  .questionToolbar
+    padding: 1em
+    position: static
+    display: block
+    left: auto
+    bottom: auto
+    border-top: none !important
+    background-color: transparent !important
+
+    .toolbar
+      margin: 1em 0
+      position: relative
+      text-align: left
+
+      svg
+        height: 3.5em
+        width: 3.5em
+        margin: 0 0.5em
+        transition: transform 150ms
+        cursor: pointer
+
+        &:hover
+          transform: scale(1.15)
+
+        &:active
+          transform: scale(1)
+
+      .toolbarDialog
+        input
+          width: 55%
+          font-size: 2.4em
+          text-align: left
+          padding-left: 0.8em
+
+        button
+          display: inline
+          margin: 0
+          margin-left: 10px
+          padding: 0.5em 1em
+          font-size: 2.5em
+
+      &.dummyToolbar svg
+        &:hover,
+        &:active
+          cursor: default
+          transform: none
+
+    .saveTopicContainer
+      display: block
+
+      button
+        margin-top: 0
+        margin-bottom: 0
+        float: right
+
+  .editor
+    &:nth-child(1)
+      .questionBar
+        margin-top: 13px
+
+    .questionBar
+      margin: 13px auto
+      width: 98%
+
+    .topicText
+      font-size: 1.5rem
+
+      img
+        width: auto
+        max-height: 25em
+
+  .addQuestionButton + .saveTopic
+    display: none

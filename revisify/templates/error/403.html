@@ -1,0 +1,13 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Forbidden{% endblock %}
+
+{% block content %}
+<section>
+	<h1>You Shall Not Pass!</h1>
+	<p>No really, this page is forbidden. Sorry about that.</p>
+	<img src="{{ url_for('static', filename='images/error/forbidden.jpg') }}" alt="forbidden" class="image">
+		<a href="/">
+			<button>Home</button>
+		</a>
+</section>
+{% endblock %}

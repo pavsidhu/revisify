@@ -1,0 +1,22 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Password Reset{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Reset Your Password</h1>
+	<p>Please enter your new password. It must be a minimum of 5 characters.</p>
+	<form class="hideInput" method="POST">
+		{{ form.hidden_tag() }}
+
+		{{ form.password(class="textBox", placeholder="Password", autocomplete="off") }}
+		{% for error in form.password.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+		{% for message in get_flashed_messages() %}
+			<p class="successText">{{ message }}</p>
+		{% endfor %}
+
+		<button onclick="submit()">Reset</button>
+	</form>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+// main: ../main.sass
+
+.scrollBar
+  &::-webkit-scrollbar
+    -webkit-appearance: none
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner
+    display: none
+
+  &::-webkit-scrollbar-track:vertical
+    display: block
+    border-radius: 10px
+    background-color: $grey-4
+
+  &::-webkit-scrollbar:vertical
+    width: 8px
+
+  &::-webkit-scrollbar-thumb
+    border-radius: 10px
+    background-color: $grey-2

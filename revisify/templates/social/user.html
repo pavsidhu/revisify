@@ -1,0 +1,597 @@
+{% extends "default.html" %}
+{% block title %}
+	{% if ownAccount %}
+		{{ current_user.name }} - Revisify
+	{% else %}
+		{{ user.name }} - Revisify
+	{% endif %}
+{% endblock %}
+
+{% block head %}
+	{% if ownAccount %}
+		<meta name="description" content="{{ current_user.name }} is on Revisify. Create an account with Revisify to follow {{ current_user.name }} and revise together.">
+	{% else %}
+		<meta name="description" content="{{ user.name }} is on Revisify. Create an account with Revisify to follow {{ user.name }} and revise together.">
+	{% endif %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/fm.selectator.jquery.css') }}">
+
+	<style>
+		.notificationBar {
+			margin-top: 0;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+<div class="userProfileCover" style="background-image: url('{{ user.profilePicture['cover'] }}')"></div>
+
+<div class="userProfileBar">
+
+	{% if not ownAccount %}
+		{% if following %}
+			<button class="followButton" onclick="Sijax.request('follow', ['{{ user.id }}'])" style="background-color: #7CB342; color: white; border: 2px solid #558B2F;">Following</button>
+		{% else %}
+			<button class="followButton" onclick="Sijax.request('follow', ['{{ user.id }}'])">Follow</button>
+		{% endif %}
+
+		<p class="userProfileReport">Report User</p>
+	{% endif %}
+
+	{% if ownAccount %}
+		<button class="editProfileButton" onclick="editProfile()">Edit My Details</button>
+	{% elif current_user.admin %}
+		<button class="editProfileButton" onclick="editProfile()">Edit Details</button>
+	{% endif %}
+
+	<div class="userProfileDetails">
+
+	<div class="userProfilePicture" style="background-image: url('{{ user.profilePicture['270'] }}');" alt="{{ user.name }}">
+		{% if ownAccount %}
+			<p id="EditProfilePicture">Edit</p>
+		{% endif %}
+
+		{% if current_user.admin and not ownAccount and not user.profilePicture['default'] %}
+			<a href="{{ url_for('admin.removePicture', userID=user.id) }}">
+				<p>Remove</p>
+			</a>
+		{% endif %}
+	</div>
+
+	<h1>{{ user.name }}</h1>
+
+	{% if user.location or user.education %}
+	<p class="userProfileInfo">
+		{% if user.location %}
+			<svg x="0px" y="0px" viewBox="0 0 54.757 54.757" xml:space="preserve">
+				<path d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952
+					L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7
+					S31.416,26,27.557,26z"/>
+			</svg>
+			{{ user.location }}<br>
+		{% endif %}
+
+		{% if user.education %}
+			<svg x="0px" y="0px" viewBox="0 0 97.056 97.056" xml:space="preserve">
+				<path d="M86.021,43.476L49.929,57.239L13.838,43.675l-2.056,18.832c-0.096,0.774,0.175,1.549,0.732,2.095
+					c0.558,0.545,1.337,0.799,2.109,0.688c1.976-0.288,3.997-0.434,6.005-0.434c11.994,0,22.726,5.081,26.705,12.643
+					c0.432,0.822,1.284,1.336,2.212,1.336h0.766c0.928,0,1.78-0.514,2.212-1.335c3.98-7.562,14.711-12.643,26.703-12.643
+					c2.013,0,4.034,0.146,6.007,0.434c0.121,0.019,0.374,0.025,0.381,0.026c1.381,0,2.602-1.039,2.5-2.5
+					C88.1,62.602,86.021,43.476,86.021,43.476z"/>
+				<path d="M95.436,29.301L50.809,12.505c-0.568-0.214-1.193-0.214-1.762,0L4.306,29.345c-0.974,0.367-1.619,1.299-1.619,2.34V62.09
+					h5.609V35.441l40.752,15.337c0.568,0.214,1.192,0.214,1.762,0l44.627-16.797c0.974-0.367,1.619-1.299,1.619-2.34
+					S96.409,29.668,95.436,29.301z"/>
+				<path d="M0.014,81.949c-0.074,0.705,0.154,1.408,0.628,1.935C1.116,84.41,1.791,84.71,2.5,84.71h5.982
+					c0.708,0,1.384-0.301,1.858-0.827s0.703-1.229,0.628-1.935L9.335,66.445h-7.69L0.014,81.949z"/>
+			</svg>
+			{{ user.education }}<br>
+		{% endif %}
+	</p>
+	{% endif %}
+
+	</div>
+
+	<div class="userProfileBarStats">
+		<span class="userProfileBarSubjects unselectable active">
+				{{ subjects|length }}
+
+				{% if subjects|length == 1 %}
+					Subject
+				{% else %}
+			 		Subjects
+				{%- endif -%}
+		</span>
+
+		<span class="userProfileBarDivider"></span>
+
+		<!-- Text not on new line to prevent added padding to right of text -->
+		<span class="userProfileBarFollowing unselectable">{{ followingCount }} Following</span>
+
+		<span class="userProfileBarDivider"></span>
+
+		<span class="userProfileBarFollowers unselectable">
+				{{ followerCount }}
+
+				{% if followers|length == 1 %}
+					Follower
+				{% else %}
+					Followers
+				{%- endif -%}
+		</span>
+
+		{% if not ownAccount %}
+			{% if current_user.admin %}
+				{% if warnings.count() < 2 %}
+					<span class="userProfileBarRight userProfileAdminWarn">Warn User</span>
+				{% endif %}
+					<span class="userProfileBarRight userProfileAdminBan">Ban User</span>
+			{% else %}
+				<span class="userProfileBarRight userProfileReport">Report User</span>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>
+
+<div class="userProfileDetails userProfileDetailsDesktop">
+
+	<div class="userProfilePicture" style="background-image: url('{{ user.profilePicture['270'] }}');" alt="{{ user.name }}">
+		{% if ownAccount %}
+			<p id="EditProfilePicture">Edit</p>
+		{% endif %}
+
+		{% if current_user.admin and not ownAccount and not user.profilePicture['default'] %}
+			<a href="{{ url_for('admin.removePicture', userID=user.id) }}">
+				<p>Remove</p>
+			</a>
+		{% endif %}
+	</div>
+
+	<h1>{{ user.name }}</h1>
+
+	{% if user.location or user.education %}
+	<p class="userProfileInfo">
+		{% if user.location %}
+			<svg x="0px" y="0px" viewBox="0 0 54.757 54.757" xml:space="preserve">
+				<path d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952
+					L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7
+					S31.416,26,27.557,26z"/>
+			</svg>
+			{{ user.location }}<br>
+		{% endif %}
+
+		{% if user.education %}
+			<svg x="0px" y="0px" viewBox="0 0 97.056 97.056" xml:space="preserve">
+				<path d="M86.021,43.476L49.929,57.239L13.838,43.675l-2.056,18.832c-0.096,0.774,0.175,1.549,0.732,2.095
+					c0.558,0.545,1.337,0.799,2.109,0.688c1.976-0.288,3.997-0.434,6.005-0.434c11.994,0,22.726,5.081,26.705,12.643
+					c0.432,0.822,1.284,1.336,2.212,1.336h0.766c0.928,0,1.78-0.514,2.212-1.335c3.98-7.562,14.711-12.643,26.703-12.643
+					c2.013,0,4.034,0.146,6.007,0.434c0.121,0.019,0.374,0.025,0.381,0.026c1.381,0,2.602-1.039,2.5-2.5
+					C88.1,62.602,86.021,43.476,86.021,43.476z"/>
+				<path d="M95.436,29.301L50.809,12.505c-0.568-0.214-1.193-0.214-1.762,0L4.306,29.345c-0.974,0.367-1.619,1.299-1.619,2.34V62.09
+					h5.609V35.441l40.752,15.337c0.568,0.214,1.192,0.214,1.762,0l44.627-16.797c0.974-0.367,1.619-1.299,1.619-2.34
+					S96.409,29.668,95.436,29.301z"/>
+				<path d="M0.014,81.949c-0.074,0.705,0.154,1.408,0.628,1.935C1.116,84.41,1.791,84.71,2.5,84.71h5.982
+					c0.708,0,1.384-0.301,1.858-0.827s0.703-1.229,0.628-1.935L9.335,66.445h-7.69L0.014,81.949z"/>
+			</svg>
+			{{ user.education }}<br>
+		{% endif %}
+	</p>
+	{% endif %}
+
+	{% if not ownAccount %}
+			{% if following %}
+				<button class="followButton inline" onclick="Sijax.request('follow', ['{{ user.id }}'])" style="background-color: #7CB342; color: white;">Following</button>
+			{% else %}
+				<button class="followButton inline" onclick="Sijax.request('follow', ['{{ user.id }}'])">Follow</button>
+			{% endif %}
+
+			{% if current_user.admin %}
+				<button class="editProfileButton inline" onclick="editProfile()" style="margin-left: 10px;">Edit Details</button>
+			{% endif %}
+	{% else %}
+		<button class="editProfileButton" onclick="editProfile()">Edit My Details</button>
+	{% endif %}
+
+</div>
+
+<section class="userSubjects">
+	{% if subjects %}
+
+  	<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+  		{% for subject in subjects %}
+				{{ circleIcon(subject) }}
+			{% endfor %}
+		</ul>
+
+  {% else %}
+
+		<div class="noContent">
+
+			<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+				{% for number in range(8) %}
+					<li class="circleIcon">
+						<svg viewBox="0 0 100 100">
+							<circle cx="50" cy="50" r="48"/>
+						</svg>
+					</li>
+				{% endfor %}
+			</ul>
+
+			{% if ownAccount %}
+				<h2>You have not yet added your subjects.</h2>
+			{% else %}
+				<h2>{{ user.name }} has no subjects.</h2>
+			{% endif %}
+
+		</div>
+
+  {% endif %}
+</section>
+
+<section class="userFollowing">
+	{% if followingUsers %}
+
+  	<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+  		{% for user in followingUsers %}
+				<li>
+					<a href="{{ url_for('social.user', hash=user.hash) }}">
+						<div class="circleUserIcon" style="background-size: cover; background-image: url('{{ user['icon']['270'] }}');"></div>
+						<p class="unselectable">{{ user.name }}</p>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+
+		{% else %}
+
+			<div class="noContent">
+
+				<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+					{% for number in range(8) %}
+					<li class="circleIcon">
+						<svg viewBox="0 0 100 100">
+							<circle cx="50" cy="50" r="48"/>
+						</svg>
+					</li>
+					{% endfor %}
+				</ul>
+
+				{% if ownAccount %}
+					<h2>You're not following anyone.</h2>
+				{% else %}
+					<h2>{{ user.name }} is not following anyone.</h2>
+				{% endif %}
+
+			</div>
+
+	  {% endif %}
+</section>
+
+<section class="userFollowers">
+	{% if followerUsers %}
+
+  	<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+  		{% for user in followerUsers %}
+				<li>
+					<a href="{{ url_for('social.user', hash=user.hash) }}">
+					<div class="circleUserIcon" style="background-size: cover; background-image: url('{{ user['icon']['270'] }}');"></div>
+						<p class="topicLabel">{{ user['name'] }}</p>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+
+	{% else %}
+
+		<div class="noContent">
+
+			<ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-4">
+				{% for number in range(8) %}
+				<li class="circleIcon">
+					<svg viewBox="0 0 100 100">
+						<circle cx="50" cy="50" r="48"/>
+					</svg>
+				</li>
+				{% endfor %}
+			</ul>
+
+			{% if ownAccount %}
+				<h2>You have no followers.</h2>
+			{% else %}
+				<h2>{{ user.name }} has no followers.</h2>
+			{% endif %}
+
+		</div>
+
+	{% endif %}
+</section>
+
+{% if current_user.admin %}
+	<section>
+
+		{% for report in reports %}
+
+			<p class="narrowWidth">Reported by
+				<a href="{{ url_for('social.user', hash=report.user.hash) }}" style="color: #BFCA33;">{{ report.user.name }}</a>
+				on <span style="color: #0ABCD4">{{ report.date|formatDate }}</span>: {{ report.issue }}
+			</p>
+			{{ button("Delete Report", url_for('admin.deleteReport', reportID=report.id)) }}
+
+		{% endfor %}
+
+		{% for warning in warnings %}
+
+			<h2><span style="color: #C21E5C;">{{ user.name }}</span> was warned on <span style="color: #0ABCD4;">{{ warning.date|formatDate }}:</span></h2>
+			<p>{{ warning.issue }}</p>
+			{{ button("Delete Warning", url_for('admin.deleteWarning', warningID=warning.id)) }}
+
+		{% endfor %}
+
+		{% if not ownAccount %}
+			{% if current_user.admin %}
+				<p class="userProfileAdmin">
+
+				{% if warnings.count() < 2 %}
+					<span class="userProfileAdminBan">Warn User</span>
+				{% endif %}
+
+				<span class="userProfileAdminBan">Ban User</span>
+			{% endif %}
+		{% endif %}
+
+	</section>
+{% endif %}
+
+{{ advert() }}
+
+{% if ownAccount %}
+	<!-- Upload profile picture popup -->
+	<div class="popupContainer">
+		<div class="popup" id="picturePopup" style="top: 50px; padding-bottom: 0; display: none;">
+			<svg onclick="hidePopup()" class="hidePopup" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Upload a Photo</h2>
+			<div class="image-editor">
+			  <div class="cropit-image-preview-container">
+			    <div class="cropit-image-preview"></div>
+			  </div>
+
+				<div style="text-align: center; margin-top: 30px;">
+					<svg version="1.1" class="zoomIcon zoomIconSmall" fill="#cfd8dc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-8.3 26.3 50 50" style="enable-background:new -8.3 26.3 50 50;" xml:space="preserve">
+						<path d="M16.7,40.3c-3.6,0-6.4,3.3-6.4,7.3c0,4,2.9,7.3,6.4,7.3c3.6,0,6.4-3.3,6.4-7.3C23.1,43.6,20.2,40.3,16.7,40.3"/>
+						<path d="M31,73V62.4c0-2.8-2.2-5-5-5H7.3c-2.8,0-5,2.2-5,5V73H31z"/>
+						<path d="M36.2,31.8v39h-39v-39H36.2 M41.7,26.3h-50v50h50V26.3L41.7,26.3z"/>
+					</svg>
+
+				  <input type="range" class="cropit-image-zoom-input">
+
+					<svg version="1.1" class="zoomIcon zoomIconLarge" fill="#cfd8dc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-8.3 26.3 50 50" style="enable-background:new -8.3 26.3 50 50;" xml:space="preserve">
+						<path d="M16.7,40.3c-3.6,0-6.4,3.3-6.4,7.3c0,4,2.9,7.3,6.4,7.3c3.6,0,6.4-3.3,6.4-7.3C23.1,43.6,20.2,40.3,16.7,40.3"/>
+						<path d="M31,73V62.4c0-2.8-2.2-5-5-5H7.3c-2.8,0-5,2.2-5,5V73H31z"/>
+						<path d="M36.2,31.8v39h-39v-39H36.2 M41.7,26.3h-50v50h50V26.3L41.7,26.3z"/>
+					</svg>
+				</div>
+
+			  <form class="hide" id="profilePicture" method="POST" enctype="multipart/form-data">
+					{{ profilePictureForm.hidden_tag() }}
+					<input type="file" class="cropit-image-input" id="picture" name="picture" style="display: none;">
+					{{ profilePictureForm.crop() }}
+			  </form>
+				<button type="button" onclick="profilePictureSubmit()">Save</button>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% if ownAccount or current_user.admin %}
+	<!-- Edit User Details Popup -->
+	<div class="popupContainer">
+		<div class="popup" id="editUserDetailsPopup">
+			<svg onclick="hidePopup()" class="hidePopup" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Edit Your Details</h2>
+			<form method="POST" id="userInfoForm">
+				{{ userDetailsForm.hidden_tag() }}
+
+				{{ userDetailsForm.name(placeholder='Your name', class='textBox', maxlength='100', autocomplete="off") }}
+				{{ userDetailsForm.education(placeholder='Your place of education', class='textBox', maxlength='100', autocomplete="off") }}
+				{{ userDetailsForm.location(placeholder='Choose your location', class='textBox') }}
+
+				{% for error in userDetailsForm.location.errors %}
+					<p class="errorText">{{ error }}</p>
+				{% endfor %}
+
+				{% for error in userDetailsForm.education.errors %}
+					<p class="errorText">{{ error }}</p>
+				{% endfor %}
+
+				<button onclick="$('#userInfoForm').submit()">Save</button>
+			</form>
+		</div>
+	</div>
+{% endif %}
+
+<!-- Share Popup -->
+<div class="popupContainer">
+	<div class="popup" id="sharePopup">
+		<svg onclick="hidePopup()" class="hidePopup" x="0px" y="0px" viewBox="0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+			<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+		</svg>
+		<h2>Share</h2>
+		<ul class="small-block-grid-4 shareIconContainer">
+			<li>
+				<a id="shareFacebook" href="" target="_blank">
+					<div class="shareIcon facebook">
+						<svg fill="#fff" x="0px" y="0px" viewBox="0 0 96.124 96.123" xml:space="preserve">
+							<path d="M72.089,0.02L59.624,0C45.62,0,36.57,9.285,36.57,23.656v10.907H24.037c-1.083,0-1.96,0.878-1.96,1.961v15.803c0,1.083,0.878,1.96,1.96,1.96h12.533v39.876c0,1.083,0.877,1.96,1.96,1.96h16.352c1.083,0,1.96-0.878,1.96-1.96V54.287h14.654c1.083,0,1.96-0.877,1.96-1.96l0.006-15.803c0-0.52-0.207-1.018-0.574-1.386c-0.367-0.368-0.867-0.575-1.387-0.575H56.842v-9.246c0-4.444,1.059-6.7,6.848-6.7l8.397-0.003c1.082,0,1.959-0.878,1.959-1.96V1.98C74.046,0.899,73.17,0.022,72.089,0.02z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareTwitter" href="" target="_blank">
+					<div class="shareIcon twitter">
+						<svg fill="#fff" x="0px" y="0px"viewBox="0 0 612 612" xml:space="preserve">
+							<path d="M612,116.258c-22.525,9.981-46.694,16.75-72.088,19.772c25.929-15.527,45.777-40.155,55.184-69.411
+								c-24.322,14.379-51.169,24.82-79.775,30.48c-22.907-24.437-55.49-39.658-91.63-39.658c-69.334,0-125.551,56.217-125.551,125.513
+								c0,9.828,1.109,19.427,3.251,28.606C197.065,206.32,104.556,156.337,42.641,80.386c-10.823,18.51-16.98,40.078-16.98,63.101
+								c0,43.559,22.181,81.993,55.835,104.479c-20.575-0.688-39.926-6.348-56.867-15.756v1.568c0,60.806,43.291,111.554,100.693,123.104
+								c-10.517,2.83-21.607,4.398-33.08,4.398c-8.107,0-15.947-0.803-23.634-2.333c15.985,49.907,62.336,86.199,117.253,87.194
+								c-42.947,33.654-97.099,53.655-155.916,53.655c-10.134,0-20.116-0.612-29.944-1.721c55.567,35.681,121.536,56.485,192.438,56.485
+								c230.948,0,357.188-191.291,357.188-357.188l-0.421-16.253C573.872,163.526,595.211,141.422,612,116.258z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareGoogle" href="" target="_blank">
+					<div class="shareIcon google">
+						<svg fill="#fff" x="0px" y="0px" viewBox="0 0 22 14" xml:space="preserve">
+							<path d="M7,6v2.4h4c-0.2,1-1.2,3-4,3c-2.4,0-4.3-2-4.3-4.4s2-4.4,4.3-4.4c1.4,0,2.3,0.6,2.8,1.1l1.9-1.8C10.5,0.7,8.9,0,7,0C3.1,0,0,3.1,0,7s3.1,7,7,7c4,0,6.7-2.8,6.7-6.8c0-0.5,0-0.8-0.1-1.2H7L7,6z"/>
+							<path d="M22,6h-2V4h-2v2h-2v2h2v2h2V8h2"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareClassroom" href="" target="_blank">
+					<div class="shareIcon classroom">
+						<svg fill="#fff" x="0px" y="0px" viewBox="0 0 96 96" xml:space="preserve">
+							<path d="M0,96C0,64,0,32,0,0c32,0,64,0,96,0c0,32,0,64,0,96C64,96,32,96,0,96z M8.2,87.8c16.1,0,31.9,0,47.7,0c0.2-1.8,0.3-3.4,0.5-5.2c7.8,0,15.4,0,23,0c0.2,1.9,0.4,3.5,0.6,5.1c2.7,0,5.1,0,7.6,0c0-26.7,0-53.1,0-79.5c-26.6,0-52.9,0-79.4,0C8.2,34.7,8.2,61,8.2,87.8z"/>
+								<path d="M32.3,61.7c-0.8-8.5,4.9-13.5,15.4-13.7c10.6-0.1,16.7,4.9,16.2,13.7C53.3,61.7,42.8,61.7,32.3,61.7z"/>
+								<path d="M46.9,30c3.7-0.1,7.1,3.3,7,7c0,3.5-3.1,6.7-6.6,6.9c-3.7,0.2-7.2-3.1-7.3-6.7C39.9,33.5,43.2,30.1,46.9,30z"/>
+								<path d="M56.6,61.7c-0.6-6.5,3.7-10.3,11.7-10.4C76.4,51.2,81,55,80.6,61.7C72.6,61.7,64.6,61.7,56.6,61.7z"/>
+								<path d="M67.7,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C62.4,40.3,64.9,37.6,67.7,37.6z"/>
+								<path d="M16.3,61.7C15.7,55.2,20,51.4,28,51.3c8.1-0.1,12.7,3.7,12.3,10.4C32.3,61.7,24.3,61.7,16.3,61.7z"/>
+								<path d="M27.5,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C22.1,40.3,24.6,37.6,27.5,37.6z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<input type="text" class="textBox" id="shareLink" placeholder="Shareable Link" onClick="this.setSelectionRange(0, this.value.length)" readonly style="margin-top: 20px;">
+	</div>
+</div>
+
+{% if not ownAccount %}
+	{% if current_user.admin %}
+	<!-- Warn Popup -->
+	<div class="popupContainer">
+		<div class="popup" id="warnUserPopup">
+			<svg onclick="hidePopup()" class="hidePopup" x="0px" y="0px" viewBox="0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Send a Warning</h2>
+			<form method="POST" id="warnUserForm">
+				<input type="text" class="textBox" id="reason" name="reason" placeholder="Enter the reason" autocomplete="off">
+				<p class="errorText" style="display: none;"></p>
+				<p class="successText" style="display: none;"></p>
+				<button type="button" class="popupButton" onclick="warnUserSend()">Warn</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Ban Popup -->
+	<div class="popupContainer">
+		<div class="popup" id="banUserPopup">
+			<svg onclick="hidePopup()" class="hidePopup" x="0px" y="0px" viewBox="0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Ban This User</h2>
+			<form method="POST" id="banUserForm">
+				<input type="text" class="textBox" id="reason" name="reason" placeholder="Enter the reason" autocomplete="off">
+				<p class="errorText" style="display: none;"></p>
+				<p class="successText" style="display: none;"></p>
+				<button type="button" class="popupButton" onclick="banUserSend()">Ban</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Delete Popup -->
+	<div class="popupContainer">
+		<div class="popup" id="deletePopup">
+			<svg onclick="hidePopup()" class="hidePopup" x="0px" y="0px" viewBox="0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Are You Sure?</h2>
+			<form method="POST" class="hideInput" action="{{ url_for('subject.delete') }}">
+				<p>This action can't be be undone.</p>
+				<input type="checkbox" id="subjectToDelete" name="subjectToDelete" value="" checked>
+				<button type="button" class="popupButton" onclick="submit()">Delete</button>
+			</form>
+		</div>
+	</div>
+
+	{% endif %}
+
+	<!-- report popup -->
+	<div class="popupContainer">
+		<div class="popup" id="reportUserPopup">
+			<h2>Report This User</h2>
+			<p>Please tell us why you would like to report this user.</p>
+			<form method="POST" id="reportUserForm">
+				<svg onclick="hidePopup()" class="hidePopup" x="0px" y="0px" viewBox="0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+					<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+				</svg>
+				{{ report.hidden_tag() }}
+
+				{{ report.issue(class="textBox", id="issue", placeholder="Enter your issue", autocomplete="off", maxlength=255) }}
+				<p class="errorText" style="display: none;"></p>
+				<p class="successText" style="display: none;"></p>
+				<button type="button" class="popupButton" onclick="reportUserSend()">Report</button>
+			</form>
+		</div>
+	</div>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/jquery.cropit.js') }}"></script>
+<script src="{{ url_for('static', filename='js/fm.selectator.jquery.min.js') }}"></script>
+<script>
+	{% if not ownAccount %}
+
+		$('.followButton').hover(function(){
+			if ($('.followButton').html().trim() === 'Following') {
+				$('.followButton').css('background-color', '#C62828');
+				$('.followButton').css('border-color', '#911616');
+				$('.followButton').html('Unfollow');
+			}
+		});
+
+		$('.followButton').mouseout(function(){
+			if ($('.followButton').html().trim() === 'Unfollow') {
+				$('.followButton').css('background-color', '#7CB342');
+				$('.followButton').css('border-color', '#558B2F');
+				$('.followButton').html('Following');
+			}
+		});
+
+	{% endif %}
+
+	img = $('.image-editor').cropit({
+    smallImage: 'stretch',
+    maxZoom: 2,
+    onImageLoaded: function() {
+      profilePictureValidation()
+    }
+  });
+
+	$('#userInfoForm [name=name]').val('{{ user.name|safeJavascript|safe }}');
+	$('#userInfoForm [name=education]').val('{{ user.education|safeJavascript|safe }}');
+	$('#userInfoForm [name=location]').val('{{ locationISO|safeJavascript|safe }}');
+
+	$('select').selectator({
+		useSearch: false
+	});
+
+	$('#issue').val('');
+
+	userHash = "{{ user.hash }}";
+</script>
+
+{% if current_user.admin %}
+	<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endif %}
+
+{% endblock %}

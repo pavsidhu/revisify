@@ -1,0 +1,29 @@
+// main: ../main.sass
+
+.supportColumns
+  *
+    width: 80%
+    margin: 0.5em auto
+    text-align: left
+
+  h2
+    margin-top: 1.3em
+
+  &:nth-child(2) h2
+    margin-top: 0
+
+@media only screen and (min-width: $tablet)
+  .supportColumns
+    width: 60%
+    margin: 0 auto
+
+@media only screen and (min-width: $desktop)
+  .supportColumns
+    width: 80%
+    margin: 0 auto
+
+  .supportColumnLeft *
+    text-align: right
+
+  .supportColumnRight *
+    text-align: left

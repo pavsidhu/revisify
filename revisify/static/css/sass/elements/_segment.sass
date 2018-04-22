@@ -1,0 +1,33 @@
+// main: ../main.sass
+
+div.segment
+  border-radius: 5px
+  font-family: 'Texta-Regular', sans-serif
+  color: $grey-1
+  font-size: 2em
+  width: 95%
+  margin: 0 auto 0.8em
+  padding: 0
+
+  span
+    padding: 0.2em 0
+    width: 33.333%
+    text-align: center
+    display: inline-block
+    border: 2px solid $grey-1
+
+    &:nth-child(even)
+      border-left: none
+      border-right: none
+
+    &:first-of-type
+      border-top-left-radius: 5px
+      border-bottom-left-radius: 5px
+
+    &:last-of-type
+      border-top-right-radius: 5px
+      border-bottom-right-radius: 5px
+
+    &.active
+      background-color: $grey-1
+      color: $grey-3

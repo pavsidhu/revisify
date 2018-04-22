@@ -1,0 +1,217 @@
+{% extends "default.html" %}
+
+{% block title %}
+	{% if not ownSubject %}
+		Revisify - {{ subject.name }} by {{ subject.user.name }}
+	{% else %}
+		Revisify - {{ subject.name }}
+	{% endif %}
+{% endblock %}
+
+{% block head %}
+	<meta name="description" content="Study material on {{ subject.name }} created by {{ subject.user.name }} on Revisify.">
+	{{ social(
+		'Revisify - ' + subject.name,
+		'Study material on ' + subject.name + ' created by ' + subject.user.name + ' on Revisify.',
+		url_for('static', filename='images/social/openGraph/' + iconcolor[1::] + '.png')
+	)}}
+{% endblock %}
+
+{% block content %}
+<section>
+	<h1 class="noMarginBottom">{{ subject.name }}</h1>
+	<div class="subtitleCredit">
+		<a href="{{ url_for('social.user', hash=subject.user.hash) }}">
+			<img src="{{ subject.user.profilePicture['80'] }}" alt="{{ subject.user.name }}">
+			<p>
+			Created by
+			{% if ownSubject %}
+				you
+			{% else %}
+				{{ subject.user.name }}
+			{% endif %}
+			</p>
+		</a>
+	</div>
+
+	<ul class="actionBar">
+		{% if subject.user.profile %}
+		<li class="shareButton" share-link="{{ subject.shareLink }}">
+			<svg viewBox="0 0 50.9 50">
+				<path d="M42.1,32.6c-2.5,0-4.7,1-6.3,2.7l-18.5-9.1c0.1-0.4,0.1-0.9,0.1-1.3c0-0.4,0-0.9-0.1-1.3l18.5-9c1.6,1.7,3.8,2.7,6.3,2.7
+					c4.8,0,8.7-3.9,8.7-8.7C50.9,3.9,47,0,42.1,0s-8.7,3.9-8.7,8.7c0,0.4,0,0.9,0.1,1.3L15,19c-1.6-1.7-3.8-2.7-6.3-2.7
+					c-4.8,0-8.7,3.9-8.7,8.7c0,4.8,3.9,8.7,8.7,8.7c2.5,0,4.7-1,6.3-2.7L33.5,40c-0.1,0.4-0.1,0.9-0.1,1.3c0,4.8,3.9,8.7,8.7,8.7
+					s8.7-3.9,8.7-8.7C50.9,36.5,47,32.6,42.1,32.6z"/>
+			</svg>
+			Share
+		</li>
+		{% endif %}
+
+		{% if ownSubject %}
+			<a href="{{ url_for('subject.edit', hash=subject.hash, slug=subject.slug) }}">
+				<li class="editButton">
+					<svg viewBox="0 0 50 50">
+						<path d="M0,39.4V50h10.6l30.6-30.8L30.6,8.6L0,39.4z M49.2,11.1c1.1-1.1,1.1-2.8,0-3.9l-6.4-6.4c-1.1-1.1-2.8-1.1-3.9,0l-5,5l10.6,10.6L49.2,11.1z"/>
+					</svg>
+					Edit
+				</li>
+			</a>
+		{% endif %}
+
+		{% if ownSubject or current_user.admin %}
+			<li class="deleteButton">
+				<svg viewBox="0 0 38.9 50">
+					<path d="M2.8,44.4c0,3.1,2.5,5.6,5.6,5.6h22.2c3.1,0,5.6-2.5,5.6-5.6V13.1H2.8V44.4z M38.9,2.8h-9.7L26.4,0H12.5L9.7,2.8H0v5.6h38.9V2.8z"/>
+				</svg>
+				Delete
+			</li>
+		{% endif %}
+
+		<li class="doneButton">
+			<svg viewBox="0 0 64 50">
+			<path d="M63.5,8.1l-7.6-7.6c-0.7-0.7-2-0.7-2.7,0L30.7,23l-7.2,7.2l-2.7-2.7l-9.9-9.9c-0.7-0.7-2-0.7-2.7,0l-7.6,7.6
+				c-0.7,0.7-0.7,2,0,2.7l21.5,21.5c0.7,0.7,2,0.7,2.7,0l38.6-38.6C64.2,10.1,64.2,8.9,63.5,8.1z"/>
+			</svg>
+			Done
+		</li>
+	</ul>
+
+	<div class="row limitRowWidth">
+
+		<div class="small-12 column">
+			<div class="columnContainer">
+				{% if not topics %}
+					{% if ownSubject %}
+						<div class="noContent" style="display: none;">
+					{% else %}
+						<div class="noContent">
+					{% endif %}
+
+					<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4">
+						{% for number in range(8) %}
+						<li class="circleIcon">
+							<svg viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="48"/>
+							</svg>
+						</li>
+						{% endfor %}
+					</ul>
+
+					{% if ownSubject %}
+						<h2>You have not yet added any topics.</h2>
+					{% else %}
+						<h2>{{ subject.user.name }} has not yet added any topics.</h2>
+					{% endif %}
+				</div>
+				{% endif %}
+
+				<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4">
+
+					{% for topic in topics %}
+						{{ circleIcon(topic) }}
+					{% endfor %}
+
+					{% if ownSubject %}
+					<li class="circleIcon add">
+						<a href="{{ url_for('topic.new', hash=subject.hash, slug=subject.slug) }}">
+							<svg viewBox="0 0 100 100">
+								<circle cx="50" cy="50" r="45" stroke-width="2"/>
+								<text class="unselectable" y=72>
+									<tspan x=50 text-anchor="middle">+</tspan>
+								</text>
+							</svg>
+							<p class="unselectable">Add a New Topic</p>
+						</a>
+					</li>
+					{% endif %}
+
+				</ul>
+
+				{{ advert() }}
+			</div>
+		</div>
+
+	</div>
+
+</section>
+
+<!-- Share Popup -->
+<div class="popupContainer">
+	<div class="popup" id="sharePopup">
+		<svg onclick="hidePopup()" class="hidePopup" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+			<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+		</svg>
+		<h2>Share</h2>
+		<ul class="small-block-grid-4 shareIconContainer">
+			<li>
+				<a id="shareFacebook" href="" target="_blank">
+					<div class="shareIcon facebook">
+						<svg version="1.1" fill="#fff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 96.124 96.123" style="enable-background:new 0 0 96.124 96.123;" xml:space="preserve">
+							<path d="M72.089,0.02L59.624,0C45.62,0,36.57,9.285,36.57,23.656v10.907H24.037c-1.083,0-1.96,0.878-1.96,1.961v15.803c0,1.083,0.878,1.96,1.96,1.96h12.533v39.876c0,1.083,0.877,1.96,1.96,1.96h16.352c1.083,0,1.96-0.878,1.96-1.96V54.287h14.654c1.083,0,1.96-0.877,1.96-1.96l0.006-15.803c0-0.52-0.207-1.018-0.574-1.386c-0.367-0.368-0.867-0.575-1.387-0.575H56.842v-9.246c0-4.444,1.059-6.7,6.848-6.7l8.397-0.003c1.082,0,1.959-0.878,1.959-1.96V1.98C74.046,0.899,73.17,0.022,72.089,0.02z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareTwitter" href="" target="_blank">
+					<div class="shareIcon twitter">
+						<svg version="1.1" fill="#fff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+							 viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
+								<path d="M612,116.258c-22.525,9.981-46.694,16.75-72.088,19.772c25.929-15.527,45.777-40.155,55.184-69.411
+									c-24.322,14.379-51.169,24.82-79.775,30.48c-22.907-24.437-55.49-39.658-91.63-39.658c-69.334,0-125.551,56.217-125.551,125.513
+									c0,9.828,1.109,19.427,3.251,28.606C197.065,206.32,104.556,156.337,42.641,80.386c-10.823,18.51-16.98,40.078-16.98,63.101
+									c0,43.559,22.181,81.993,55.835,104.479c-20.575-0.688-39.926-6.348-56.867-15.756v1.568c0,60.806,43.291,111.554,100.693,123.104
+									c-10.517,2.83-21.607,4.398-33.08,4.398c-8.107,0-15.947-0.803-23.634-2.333c15.985,49.907,62.336,86.199,117.253,87.194
+									c-42.947,33.654-97.099,53.655-155.916,53.655c-10.134,0-20.116-0.612-29.944-1.721c55.567,35.681,121.536,56.485,192.438,56.485
+									c230.948,0,357.188-191.291,357.188-357.188l-0.421-16.253C573.872,163.526,595.211,141.422,612,116.258z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareGoogle" href="" target="_blank">
+					<div class="shareIcon google">
+						<svg version="1.1" fill="#fff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 14" style="enable-background:new 0 0 22 14;" xml:space="preserve">
+							<path d="M7,6v2.4h4c-0.2,1-1.2,3-4,3c-2.4,0-4.3-2-4.3-4.4s2-4.4,4.3-4.4c1.4,0,2.3,0.6,2.8,1.1l1.9-1.8C10.5,0.7,8.9,0,7,0C3.1,0,0,3.1,0,7s3.1,7,7,7c4,0,6.7-2.8,6.7-6.8c0-0.5,0-0.8-0.1-1.2H7L7,6z"/>
+							<path d="M22,6h-2V4h-2v2h-2v2h2v2h2V8h2"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareClassroom" href="" target="_blank">
+					<div class="shareIcon classroom">
+						<svg version="1.1" fill="#fff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 96 96" style="enable-background:new 0 0 96 96;" xml:space="preserve">
+							<path d="M0,96C0,64,0,32,0,0c32,0,64,0,96,0c0,32,0,64,0,96C64,96,32,96,0,96z M8.2,87.8c16.1,0,31.9,0,47.7,0c0.2-1.8,0.3-3.4,0.5-5.2c7.8,0,15.4,0,23,0c0.2,1.9,0.4,3.5,0.6,5.1c2.7,0,5.1,0,7.6,0c0-26.7,0-53.1,0-79.5c-26.6,0-52.9,0-79.4,0C8.2,34.7,8.2,61,8.2,87.8z"/>
+								<path d="M32.3,61.7c-0.8-8.5,4.9-13.5,15.4-13.7c10.6-0.1,16.7,4.9,16.2,13.7C53.3,61.7,42.8,61.7,32.3,61.7z"/>
+								<path d="M46.9,30c3.7-0.1,7.1,3.3,7,7c0,3.5-3.1,6.7-6.6,6.9c-3.7,0.2-7.2-3.1-7.3-6.7C39.9,33.5,43.2,30.1,46.9,30z"/>
+								<path d="M56.6,61.7c-0.6-6.5,3.7-10.3,11.7-10.4C76.4,51.2,81,55,80.6,61.7C72.6,61.7,64.6,61.7,56.6,61.7z"/>
+								<path d="M67.7,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C62.4,40.3,64.9,37.6,67.7,37.6z"/>
+								<path d="M16.3,61.7C15.7,55.2,20,51.4,28,51.3c8.1-0.1,12.7,3.7,12.3,10.4C32.3,61.7,24.3,61.7,16.3,61.7z"/>
+								<path d="M27.5,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C22.1,40.3,24.6,37.6,27.5,37.6z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<input type="text" class="textBox" id="shareLink" placeholder="Shareable Link" onClick="this.setSelectionRange(0, this.value.length)" style="margin-top: 20px;">
+	</div>
+</div>
+
+{% if ownSubject or not ownSubject and current_user.admin %}
+<!-- Topic delete popup -->
+<div class="popupContainer">
+	<div class="popup" id="deletePopup">
+		<h2>Are You Sure?</h2>
+		<p>All of your topics for this subject will be lost forever, including yours and other user's topic results.</p>
+		<form method="POST" class="hideInput" action="{{ url_for('subject.delete') }}">
+			<svg onclick="hidePopup()" class="hidePopup" viewBox="0 0 300 300" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<input type="checkbox" id="subjectToDelete" name="subjectToDelete" value="{{ subject.id }}" checked>
+			<button type="button" class="popupButton" onclick="submit()">Delete</button>
+		</form>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

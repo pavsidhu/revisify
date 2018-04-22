@@ -1,0 +1,54 @@
+{% extends "default.html" %}
+{% block title %}Revisify App - Coming This Spring{% endblock %}
+
+{% block head %}
+	<!-- <meta name="google-site-verification" content="mOcokzK2Ud6Cp-yApsXqFZu97fN3etnYC9YPytfuV1o"/>
+	<meta name="description" content="We provide easy to use study tools to make learning fun and effective for free.">
+	<meta name="msvalidate.01" content="FA6058C3525F07BBAFF6BACF0CCD7A8E" />
+
+	{{ social(
+		'Revisify - A free to use study tool for students',
+		'We provide simple and engaging tools to help students study for free.'
+	)}} -->
+<style>
+	#content {
+		padding-bottom: 157px;
+	}
+
+	h1 {
+		font-size: 4em
+	}
+
+	p {
+		font-size: 2em;
+		line-height: 1.4em;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Revisify is Going Mobile</h1>
+	<img src="{{ url_for('static', filename='images/app/iPhone.png') }}" alt="Revisify App Preview" style="margin: 0 auto; display: block; margin-top: 40px">
+	<p class="narrowWidth">
+		Create questions, test yourself and be ready for exams all from your phone.
+		Please leave your email below if you would like to be notified of when the
+		Revisify App is out available on The App Store and Google Play!
+	</p>
+
+	<form method="POST">
+		<input class="textBox" type="email" placeholder="Enter your email address">
+
+		<button style="background-color: #C2185B; color: #FCE4EC">Notify Me</button>
+	</form>
+
+	<img src="{{ url_for('static', filename='images/app/iPhone.png') }}" alt="Revisify App Preview" style="margin: 0 auto; display: block; margin-top: 40px">
+
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+</script>
+{% endblock %}

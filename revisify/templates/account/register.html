@@ -1,0 +1,85 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Register{% endblock %}
+
+{% block head %}
+<meta name="description" content="Begin improving your revision by creating an account for free with Revisify today.">
+<style>
+	input[type="checkbox"]:checked + label {
+		background-image: url({{ url_for('static', filename="images/checkbox.png") }});
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Register</h1>
+
+	{{ button('Register With Google', url_for('signInOauth.authorize', provider='google'), class='signInSocial signInGoogle') }}
+	{{ button('Register With Facebook', url_for('signInOauth.authorize', provider='facebook'), class='signInSocial signInFacebook') }}
+
+	<div class="signInDivider unselectable">
+		<p>or</p>
+	</div>
+
+	<form method="POST" onsubmit="$('form button').attr('disabled', 'disabled')">
+		{{ form.hidden_tag() }}
+
+		{{ form.name(placeholder='Full name', class="textBox", maxlength="100") }}
+
+		{{ form.email(placeholder='Email', class="textBox", maxlength="320") }}
+
+		{{ form.password(placeholder='Password', class="textBox") }}
+
+		{{ form.remember(id="remember") }}
+		<label for="remember" class="unselectable">
+		</label>
+		{{ form.remember.label(class="unselectable remember", style="margin-right: 0;") }}
+
+		{% for error in form.name.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{% for error in form.email.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{% for error in form.password.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		<p class="smallText">
+			By registering you agree to the <a href="/terms-of-service" class="underline">Terms of Service</a> and the <a href="/privacy-policy" class="underline">Privacy Policy</a>.
+		</p>
+
+		<button onclick="submit(); this.disabled=true" style="color: white; background-color:#C21E5C;">Register</button>
+	</form>
+
+	{% for message in get_flashed_messages(category_filter=['popup']) %}
+		<div class="popupContainer">
+			<div class="popup" id="oauthPopup">
+				<svg onclick="hidePopup()" class="hidePopup" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve" fill="{{ textcolor }}">
+					<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+				</svg>
+				<h2>We Were Unable to Connect</h2>
+				<p>{{ message }}</p>
+				<button type="button" onclick="hidePopup()" style="margin-bottom: 0;">Okay</button>
+			</div>
+			<script>
+				$('.overlay').fadeIn(50);
+				$('#oauthPopup').fadeIn(50);
+			</script>
+		</div>
+	{% endfor %}
+
+</section>
+
+<script>
+	var google_conversion_id = 933865519;
+	var google_conversion_language = "en";
+	var google_conversion_format = "3";
+	var google_conversion_color = "ffffff";
+	var google_conversion_label = "3EcDCJ_pmWMQr9CmvQM";
+	var google_remarketing_only = false;
+</script>
+<script src="//www.googleadservices.com/pagead/conversion.js"></script>
+{% endblock %}

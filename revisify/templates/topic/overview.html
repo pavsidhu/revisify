@@ -1,0 +1,533 @@
+{% extends "default.html" %}
+
+{% block title %}Revisify - {{ topic.name }}{% endblock %}
+
+{% block head %}
+<style>
+	.questionToolbar {
+		background-color: {{ bgcolor }};
+		border-color: {{ navcolor }};
+	}
+
+	.questionToolbar svg {
+		fill: {{ textcolor }};
+	}
+
+	.questionToolbar .dummyToolbar svg {
+		fill: {{ iconcolor }};
+	}
+
+	.questionToolbar.questionToolbarSticky {
+		border-bottom: 3px solid {{ navcolor }};
+		background-image: linear-gradient(to top, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), linear-gradient(to top, {{ bgcolor }}, {{ bgcolor }});
+	}
+
+	.wysihtml5-command-active,
+	.wysihtml5-command-dialog-opened {
+		fill: {{ iconcolor }} !important;
+	}
+
+	.questionBar svg {
+		fill: {{ textcolor }};
+	}
+
+	.topicText {
+		background-color: {{ textcolor }};
+	}
+
+	.topicText a {
+		color: {{ iconcolor }};
+		border-color: {{ iconcolor }};
+	}
+
+	.editorSortPlaceholder {
+		background-color: {{ navcolor }};
+	}
+
+	.addQuestionButton {
+		background-color: {{ iconcolor }};
+	}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<section class="topicOverview">
+	<h1>{{ topic.name }}</h1>
+
+	<form method="POST" id="sendTopicForm">
+		<input type="text" value="{{ topic.name }}" name="topicName" class="textBox topicName" placeholder="Enter a topic name" autocomplete="off" maxlength="150">
+
+		<p class="errorText topicError" style="color: {{ textcolor }};"></p>
+	</form>
+
+	<ul class="actionBar">
+		{% if user.profile %}
+		<li class="shareButton" share-link="{{ topic.shareLink }}">
+			<svg viewBox="0 0 50.9 50">
+				<path d="M42.1,32.6c-2.5,0-4.7,1-6.3,2.7l-18.5-9.1c0.1-0.4,0.1-0.9,0.1-1.3c0-0.4,0-0.9-0.1-1.3l18.5-9c1.6,1.7,3.8,2.7,6.3,2.7
+					c4.8,0,8.7-3.9,8.7-8.7C50.9,3.9,47,0,42.1,0s-8.7,3.9-8.7,8.7c0,0.4,0,0.9,0.1,1.3L15,19c-1.6-1.7-3.8-2.7-6.3-2.7
+					c-4.8,0-8.7,3.9-8.7,8.7c0,4.8,3.9,8.7,8.7,8.7c2.5,0,4.7-1,6.3-2.7L33.5,40c-0.1,0.4-0.1,0.9-0.1,1.3c0,4.8,3.9,8.7,8.7,8.7
+					s8.7-3.9,8.7-8.7C50.9,36.5,47,32.6,42.1,32.6z"/>
+			</svg>
+			Share
+		</li>
+		{% endif %}
+
+		{% if ownTopic %}
+			<li class="editButton">
+				<svg viewBox="0 0 50 50">
+					<path d="M0,39.4V50h10.6l30.6-30.8L30.6,8.6L0,39.4z M49.2,11.1c1.1-1.1,1.1-2.8,0-3.9l-6.4-6.4c-1.1-1.1-2.8-1.1-3.9,0l-5,5l10.6,10.6L49.2,11.1z"/>
+				</svg>
+				Edit
+			</li>
+		{% endif %}
+
+		{% if ownTopic or current_user.admin %}
+			<li class="deleteButton">
+				<svg viewBox="0 0 38.9 50">
+					<path d="M2.8,44.4c0,3.1,2.5,5.6,5.6,5.6h22.2c3.1,0,5.6-2.5,5.6-5.6V13.1H2.8V44.4z M38.9,2.8h-9.7L26.4,0H12.5L9.7,2.8H0v5.6h38.9V2.8z"/>
+				</svg>
+				Delete
+			</li>
+		{% endif %}
+	</ul>
+
+	<div class="row limitRowWidth topicOverviewFirstRow">
+
+		<div class="column small-12 medium-12 large-6 studyMode">
+			<div class="columnContainer columnContainerHasBottom">
+				<h2>Study Modes</h2>
+
+				<div class="studyModeMain">
+					<div class="studyModeChoices">
+						<a href="{{ url_for('study.test', hash=topic.hash, subjectSlug=topic.subject.slug, topicSlug=topic.slug) }}">
+							<button>
+								<svg fill="{{ bgcolor }}" viewBox="0 0 100 100">
+									<path d="M87.29,22.81c0-.05,0-.1,0-.16V22.6c0-.06,0-.12,0-.18v0l-.06-.18v0L87.06,22v0L87,21.86l0,0-.09-.12,0-.05-.1-.11,0,0L65.82.64l0,0L65.66.5l-.05,0L65.49.37l0,0L65.3.26h0L65.11.17h0L64.91.09h0l-.18,0h-.06l-.16,0h-46A5.76,5.76,0,0,0,12.7,5.75V94.25A5.76,5.76,0,0,0,18.45,100h63.1a5.76,5.76,0,0,0,5.75-5.75V23A2.12,2.12,0,0,0,87.29,22.81ZM66.46,7.44,79.86,20.85h-12a1.4,1.4,0,0,1-1.4-1.39v-12ZM82.95,94.25a1.4,1.4,0,0,1-1.39,1.4H18.45a1.4,1.4,0,0,1-1.4-1.4V5.75a1.4,1.4,0,0,1,1.4-1.4H62.1v15.1a5.76,5.76,0,0,0,5.75,5.75H82.95v69Z"/>
+									<path d="M75.16,37.26H53.89a2.18,2.18,0,0,0,0,4.36H75.16a2.18,2.18,0,0,0,0-4.36Z"/>
+									<path d="M62.79,47.88H53.89a2.18,2.18,0,0,0,0,4.36h8.89a2.18,2.18,0,0,0,0-4.36Z"/>
+									<path d="M41.66,40.41a2.18,2.18,0,0,0-3.08,0l-4.06,4.06-2.19-2.2a2.18,2.18,0,0,0-3.08,3.08L33,49.1a2.18,2.18,0,0,0,1.54.64h0a2.18,2.18,0,0,0,1.54-.64l5.6-5.61A2.18,2.18,0,0,0,41.66,40.41Z"/>
+									<path d="M46.07,32H24.84a2.18,2.18,0,0,0-2.18,2.18V55.37a2.18,2.18,0,0,0,2.18,2.18H46.07a2.18,2.18,0,0,0,2.18-2.18V34.14A2.18,2.18,0,0,0,46.07,32ZM43.89,53.19H27V36.31H43.89Z"/>
+									<path d="M75.16,69.75H53.89a2.18,2.18,0,1,0,0,4.36H75.16a2.18,2.18,0,1,0,0-4.36Z"/>
+									<path d="M62.78,80.36H53.89a2.18,2.18,0,1,0,0,4.36h8.89a2.18,2.18,0,1,0,0-4.36Z"/>
+									<path d="M46.07,64.44H24.84a2.18,2.18,0,0,0-2.18,2.18V87.85A2.18,2.18,0,0,0,24.84,90H46.07a2.18,2.18,0,0,0,2.18-2.18V66.62A2.18,2.18,0,0,0,46.07,64.44ZM43.89,85.67H27V68.8H43.89Z"/>
+								</svg>
+								Test
+							</button>
+						</a>
+
+						<a href="{{ url_for('study.practice', hash=topic.hash, subjectSlug=topic.subject.slug, topicSlug=topic.slug) }}">
+							<button>
+								<svg fill="{{bgcolor}}" viewBox="0 0 100 100">
+									<path d="M82.43,21.19l.06-.23-.17-3.17-.71-3.75.06-2.73-4.6-5.19L72.4,4.36,69.34,6.53l-2.12-.81-2.27.94-2.27-.12L61,8.37,57.75,7.14l-1.1,3L53.43,8.1l0-.44L49.7,4.26l-2.57-1.7L45.65,1.33,41.29,0,39.54,2.12l-6.79,1L30,5.51,26.21,6.64l-7.76,4.3,0,4.88L16.21,18.2l.92,3.37a5.06,5.06,0,0,0-1.64,4.5l7.83,51.09-1.63,1.2L16.9,82.16l-3.71,4.47.65,1.48v3.28l3.38,3.77,1.13.23.73,2.53.94-.36.47.57,5.52.79L27.66,100l2.57-.74,1-1,1.37.5L37.06,97H68.5a5.76,5.76,0,0,0,5.85-4.63L84.52,26.07A5.13,5.13,0,0,0,82.43,21.19Zm-60-3.77,0-4.12,5.12-2.87,4.36-1.31L34.48,7l7.18-1.1,1-1.23,1,.31,1,.79,2.46,1.62,2.21,2,0,.87,7.78,5,2.87-2.33.2-.54,2,.74,2.25-2.42,1.3.07,1.64-.68,2.64,1L73,8.88l1.73.66,2.9,3.27,0,1.59.73,3.76.05,1H20.83Zm13.63,61L26.65,69l-.42-2.76,9.85-9.85,11,11Zm11-39.46-11,11-11-11,11-11ZM39.28,24.7l.23-.23H61.09l.23.23-11,11Zm0,28.44,11-11,11,11-11,11ZM53.5,38.92l11-11,11,11-11,11Zm-32-3.56L20,25.38a.48.48,0,0,1,.15-.42,1.58,1.58,0,0,1,1.22-.49h11.3l.23.23-11,11ZM32.88,53.14l-7.5,7.5L22.66,42.92Zm-.32,42.37-2.13-.77-1.8,1.84-.48.14-1-.68-5-.72-.93-1.13-.4-1.37-1.93-.4-2-2.18V87.48l-.16-.37,2.2-2.68,4.64-3.68,2-1.46,1.38-.23,2.31.83,1.73-.25,1.12,1.28.94,4,2.1.51,1.6,1.69.9,1.85-3,5.14.7.37Zm6.45-3,1.77-3,3,3Zm11.4,0h-.23L39.28,81.58l11-11,11,11Zm19.46-.79a1.34,1.34,0,0,1-1.38.79H56.81l7.71-7.71,5.57,5.57Zm1.06-6.9-3.22-3.22L72.1,77.2Zm2.32-15.16-8.74,8.74-11-11,11-11,9.35,9.35Zm1.46-9.5-7-7,9.53-9.53ZM80,25.38,78.5,35.48,67.72,24.7l.23-.23H78.67a1.58,1.58,0,0,1,1.22.49A.48.48,0,0,1,80,25.38Z"/>
+								</svg>
+								Practice
+							</button>
+						</a>
+					</div>
+
+					<div class="columnContainerBottom">
+						<svg class="columnContainerBottomLeft studyModeInfoButton" viewBox="0 0 54 100.2">
+							<circle cx="28.8" cy="14" r="14"/>
+							<polygon points="43,86.2 43,37.2 34,37.2 15,37.2 0,37.2 0,51.2 15,51.2 15,86.2 0,86.2 0,100.2 15,100.2 20,100.2 34,100.2 43,100.2 54,100.2 54,86.2 "/>
+						</svg>
+					</div>
+				</div>
+
+				<div class="studyModeInfo">
+					<p>Test - Questions are given in order and your score is recorded at the end.</p>
+					<p>Practice - Questions are endlessly given in a random order. Your score is not recorded.</p>
+
+					<button style="display: block; margin: 0.5em auto 0.2em;">Okay</button>
+				</div>
+
+			</div>
+		</div>
+
+		{% if resultsDate %}
+		<div class="column small-12 medium-12 large-6">
+			<div class="columnContainer">
+				<h2>Your Test Progress</h2>
+
+				<div class="progressChart">
+					<canvas></canvas>
+				</div>
+
+			</div>
+		</div>
+		{% endif %}
+
+	</div>
+
+	<div class="row limitRowWidth">
+		<div class="column small-12">
+			<div class="columnContainer">
+				{{ advert() }}
+
+				<!--  Sticky Question/Answer Formatting Toolbar -->
+				<div class="questionToolbar hidden">
+					<div class="row">
+						<div class="column small-12 large-6 toolbarContainer">
+
+							<div class="toolbar dummyToolbar">
+								<svg class="boldButton" viewBox="0 0 71.4 71.4">
+									<path d="M53.8,39.4c-1.7-2.3-4.3-3.9-7.8-4.7c6-1.9,9-5.6,9-11.1c0-2.7-0.7-5-2.1-7c-1.4-1.9-3.1-3.4-5.2-4.4c-2.1-1-5.2-1.5-9.4-1.5H15.1v50h23.3c6.4,0,11-1.4,13.8-4.1c2.8-2.7,4.2-6,4.2-9.7C56.4,44.2,55.5,41.7,53.8,39.4z M26.7,19.6h8c2.4,0,4.1,0.1,4.9,0.4s1.6,0.8,2.3,1.7c0.7,0.9,1,2,1,3.3c0,1.2-0.4,2.4-1.3,3.7c-0.8,1.3-2.9,1.9-6.1,1.9h-8.9V19.6z M42.2,49.8c-1.3,1.1-3.4,1.6-6.5,1.6h-9V39.4h9.5c2.8,0,4.8,0.6,6.1,1.8c1.2,1.2,1.8,2.6,1.8,4.2C44.1,47.3,43.5,48.8,42.2,49.8z">
+								</svg>
+								<svg class="italicButton" viewBox="0 0 71.4 71.4">
+									<polygon points="17.6,60.7 18.7,53.6 27.9,53.6 33.1,17.8 23.6,17.8 24.7,10.7 53.9,10.7 52.8,17.8 42.9,17.8 37.7,53.6 47.9,53.6 46.8,60.7">
+								</svg>
+								<svg class="subscriptButton" viewBox="0 0 71.4 71.4">
+									<path d="M3.1,10.7h39.8v8.8H28v41.2H17.9V19.6H3.1V10.7z"/>
+									<path d="M47.4,56.5l11.3-11c1.8-1.8,2.3-2.9,2.3-4.7c0-2.3-1.8-4.2-4.7-4.2c-3,0-5,1.8-6.5,2.9l-3.1-4.7c0,0,3.7-3.9,10.2-3.9c7.1,0,11,4.2,11,9.2c0,3.1-0.9,5.4-3.3,7.8l-7.9,7.7h11.6v5.1H47.4V56.5z"/>
+								</svg>
+								<svg class="superscriptButton" viewBox="0 0 71.4 71.4">
+									<path d="M3.1,10.7h39.8v8.8H28v41.2H17.9V19.6H3.1V10.7z"/>
+									<path d="M47.4,36.3l11.3-11c1.8-1.8,2.3-2.9,2.3-4.7c0-2.3-1.8-4.2-4.7-4.2c-3,0-5,1.8-6.5,2.9l-3.1-4.7c0,0,3.7-3.9,10.2-3.9c7.1,0,11,4.2,11,9.2c0,3.1-0.9,5.4-3.3,7.8l-7.9,7.7h11.6v5.1H47.4V36.3z"/>
+								</svg>
+								<svg class="linkButton" viewBox="0 0 71.4 71.4">
+								<path d="M56.8,33.4l-9.4,9.4c-5.2,5.2-13.6,5.2-18.8,0c-0.8-0.8-1.5-1.7-2-2.7l4.4-4.4c0.2-0.2,0.5-0.3,0.7-0.5c0.3,1,0.8,2,1.6,2.8c2.6,2.6,6.8,2.6,9.4,0l9.4-9.4c2.6-2.6,2.6-6.8,0-9.4c-2.6-2.6-6.8-2.6-9.4,0l-3.3,3.3c-2.7-1.1-5.6-1.3-8.5-0.9l7.1-7.1c5.2-5.2,13.6-5.2,18.8,0C62,19.8,62,28.2,56.8,33.4z M32,48.8l-3.3,3.3c-2.6,2.6-6.8,2.6-9.4,0s-2.6-6.8,0-9.4l9.4-9.4c2.6-2.6,6.8-2.6,9.4,0c0.8,0.8,1.3,1.8,1.6,2.8c0.2-0.1,0.5-0.3,0.7-0.5l4.4-4.4c-0.6-0.9-1.2-1.9-2-2.7c-5.2-5.2-13.6-5.2-18.8,0l-9.4,9.4c-5.2,5.2-5.2,13.6,0,18.8c5.2,5.2,13.6,5.2,18.8,0l7.1-7.1C37.6,50.1,34.7,49.9,32,48.8z">
+								</svg>
+								<svg class="bulletButton" viewBox="0 0 71.4 71.4">
+									<circle cx="12.8" cy="17" r="6.3"/>
+									<circle cx="12.8" cy="35.5" r="6.3"/>
+									<circle cx="12.8" cy="54.5" r="6.3"/>
+									<path d="M25.2,21.4h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3c0-0.7-0.6-1.2-1.3-1.2H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3C23.9,20.8,24.5,21.4,25.2,21.4z"/>
+									<path d="M63.6,31.1H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3c0,0.7,0.6,1.2,1.3,1.2h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3C64.9,31.6,64.3,31.1,63.6,31.1z"/>
+									<path d="M63.6,50.1H25.2c-0.7,0-1.3,0.6-1.3,1.2v6.3c0,0.7,0.6,1.2,1.3,1.2h38.4c0.3,0,0.7-0.1,0.9-0.4c0.2-0.2,0.4-0.5,0.4-0.9v-6.3C64.9,50.6,64.3,50.1,63.6,50.1z"/>
+								</svg>
+								<svg class="imageButton" viewBox="0 0 71.4 71.4">
+									<path d="M10.7,10.7l0,50h50l0-50H10.7z M55.2,16.2l0,32.1l-9.5-11.4l-7.3,7.7L26.6,30.5L16.2,46.8l0-30.5H55.2z"/>
+									<path d="M41.2,30.4c2.2,0,4-1.8,4-4s-1.8-4-4-4c-2.2,0-4,1.8-4,4C37.2,28.6,39,30.4,41.2,30.4z"/>
+								</svg>
+							</div>
+
+						</div>
+
+						<div class="column small-6 saveTopicContainer">
+							<button class="saveTopic">Save</button>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="topicQuestions">
+
+					{% for question in questions %}
+
+					<div class="editor" id="editor{{ question['number'] }}" data-question="{{ question['number'] }}">
+
+						<ul class="questionBar small-block-grid-3" id="questionBar{{ question['number'] }}">
+
+							<!-- Question Drag Handle and Number -->
+							<li>
+								<div class="questionSortHandlerContainer">
+									<svg class="questionSortHandle hidden" viewBox="0 0 100 100">
+										<path d="M93.2,3.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V6.2C96.4,5,95,3.9,93.2,3.9z"/>
+										<path d="M93.2,38.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V41.2C96.4,40,95,38.9,93.2,38.9z"/>
+										<path d="M93.2,73.9H-0.4c-1.8,0-3.2,1-3.2,2.3v10.3c0,1.3,1.4,2.3,3.2,2.3h93.5c1.8,0,3.2-1,3.2-2.3V76.2C96.4,75,95,73.9,93.2,73.9z"/>
+									</svg>
+								</div>
+								<p class="questionNumber" id="number{{ question['number'] }}">#{{ question['number'] }}</p>
+							</li>
+
+							<!-- Add Question -->
+							<li>
+								<svg class="addQuestion hidden" data-question="{{ question['number'] }}" id="addQuestion{{ question['number'] }}" viewBox="0 0 292.8 292.6">
+									<path d="M177.8,201.7v-23.8h43.5l63.2,0c4.6,0,8.3-3.7,8.3-8.3v-46.3c0-4.6-3.8-8.4-8.4-8.4h-78h-28.6V86.7l-0.1-78.4c0-4.6-3.7-8.3-8.3-8.3l-46.3,0c-4.6,0-8.3,3.7-8.3,8.3v71.9l0,34.8l-36.8,0l-69.8-0.1c-4.6,0-8.3,3.7-8.3,8.3l0,46.2c0,4.6,3.7,8.3,8.3,8.3h75.5h31.1v29.4l0,77.2c0,4.6,3.7,8.3,8.3,8.3l46.2,0c4.6,0,8.3-3.7,8.3-8.3L177.8,201.7z"/>
+								</svg>
+							</li>
+
+							<!-- Delete Question -->
+							<li class="deleteQuestionContainer">
+								<svg class="deleteQuestion hidden" data-question="{{ question['number'] }}" id="deleteQuestion{{ question['number'] }}" viewBox="0 0 469.4 469.4">
+									<path d="M310.4,235.1L459.9,85.5c12.5-12.5,12.5-33,0-45.7L429.4,9.4c-12.5-12.5-33-12.5-45.7,0L234.3,159L85.6,10.3c-12.5-12.5-33-12.5-45.7,0L9.5,40.8C-3,53.3-3,73.7,9.5,86.4l148.6,148.6L9.7,383.5c-12.5,12.5-12.5,33,0,45.7l30.4,30.4c12.5,12.5,33,12.5,45.7,0l148.5-148.4L383.1,460c12.5,12.5,33,12.5,45.7,0l30.4-30.4c12.5-12.5,12.5-33,0-45.7L310.4,235.1z"/>
+								</svg>
+							</li>
+
+						</ul>
+
+						<div class="row">
+							<div class="small-12 medium-6 columns">
+								<div id="question{{ question['number'] }}" class="topicText questionTopicText unclickable mousetrap" contenteditable="true" number="{{ question['number'] }}">
+								</div>
+							</div>
+							<div class="small-12 medium-6 columns">
+								<div id="answer{{ question['number'] }}" class="topicText answerTopicText unclickable mousetrap" contenteditable="true" number="{{ question['number'] }}">
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					{% endfor %}
+
+				</div>
+
+				<div class="addQuestionButton unselectable hidden">
+					<p>Add Question</p>
+				</div>
+
+				<button class="saveTopic hidden">Save</button>
+
+			</div>
+		</div>
+	</div>
+
+</section>
+
+
+<!-- Share Popup -->
+<div class="popupContainer">
+	<div class="popup" id="sharePopup">
+		<svg onclick="hidePopup()" class="hidePopup" viewBox="0 0 300 300" fill="{{ textcolor }}">
+			<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+		</svg>
+		<h2>Share</h2>
+		<ul class="small-block-grid-4 shareIconContainer">
+			<li>
+				<a id="shareFacebook" href="" target="_blank">
+					<div class="shareIcon facebook">
+						<svg fill="#fff" viewBox="0 0 96.124 96.123">
+							<path d="M72.089,0.02L59.624,0C45.62,0,36.57,9.285,36.57,23.656v10.907H24.037c-1.083,0-1.96,0.878-1.96,1.961v15.803c0,1.083,0.878,1.96,1.96,1.96h12.533v39.876c0,1.083,0.877,1.96,1.96,1.96h16.352c1.083,0,1.96-0.878,1.96-1.96V54.287h14.654c1.083,0,1.96-0.877,1.96-1.96l0.006-15.803c0-0.52-0.207-1.018-0.574-1.386c-0.367-0.368-0.867-0.575-1.387-0.575H56.842v-9.246c0-4.444,1.059-6.7,6.848-6.7l8.397-0.003c1.082,0,1.959-0.878,1.959-1.96V1.98C74.046,0.899,73.17,0.022,72.089,0.02z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareTwitter" href="" target="_blank">
+					<div class="shareIcon twitter">
+						<svg fill="#fff" viewBox="0 0 612 612">
+								<path d="M612,116.258c-22.525,9.981-46.694,16.75-72.088,19.772c25.929-15.527,45.777-40.155,55.184-69.411
+									c-24.322,14.379-51.169,24.82-79.775,30.48c-22.907-24.437-55.49-39.658-91.63-39.658c-69.334,0-125.551,56.217-125.551,125.513
+									c0,9.828,1.109,19.427,3.251,28.606C197.065,206.32,104.556,156.337,42.641,80.386c-10.823,18.51-16.98,40.078-16.98,63.101
+									c0,43.559,22.181,81.993,55.835,104.479c-20.575-0.688-39.926-6.348-56.867-15.756v1.568c0,60.806,43.291,111.554,100.693,123.104
+									c-10.517,2.83-21.607,4.398-33.08,4.398c-8.107,0-15.947-0.803-23.634-2.333c15.985,49.907,62.336,86.199,117.253,87.194
+									c-42.947,33.654-97.099,53.655-155.916,53.655c-10.134,0-20.116-0.612-29.944-1.721c55.567,35.681,121.536,56.485,192.438,56.485
+									c230.948,0,357.188-191.291,357.188-357.188l-0.421-16.253C573.872,163.526,595.211,141.422,612,116.258z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareGoogle" href="" target="_blank">
+					<div class="shareIcon google">
+						<svg fill="#fff" viewBox="0 0 22 14">
+							<path d="M7,6v2.4h4c-0.2,1-1.2,3-4,3c-2.4,0-4.3-2-4.3-4.4s2-4.4,4.3-4.4c1.4,0,2.3,0.6,2.8,1.1l1.9-1.8C10.5,0.7,8.9,0,7,0C3.1,0,0,3.1,0,7s3.1,7,7,7c4,0,6.7-2.8,6.7-6.8c0-0.5,0-0.8-0.1-1.2H7L7,6z"/>
+							<path d="M22,6h-2V4h-2v2h-2v2h2v2h2V8h2"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+			<li>
+				<a id="shareClassroom" href="" target="_blank">
+					<div class="shareIcon classroom">
+						<svg fill="#fff" viewBox="0 0 96 96">
+							<path d="M0,96C0,64,0,32,0,0c32,0,64,0,96,0c0,32,0,64,0,96C64,96,32,96,0,96z M8.2,87.8c16.1,0,31.9,0,47.7,0c0.2-1.8,0.3-3.4,0.5-5.2c7.8,0,15.4,0,23,0c0.2,1.9,0.4,3.5,0.6,5.1c2.7,0,5.1,0,7.6,0c0-26.7,0-53.1,0-79.5c-26.6,0-52.9,0-79.4,0C8.2,34.7,8.2,61,8.2,87.8z"/>
+								<path d="M32.3,61.7c-0.8-8.5,4.9-13.5,15.4-13.7c10.6-0.1,16.7,4.9,16.2,13.7C53.3,61.7,42.8,61.7,32.3,61.7z"/>
+								<path d="M46.9,30c3.7-0.1,7.1,3.3,7,7c0,3.5-3.1,6.7-6.6,6.9c-3.7,0.2-7.2-3.1-7.3-6.7C39.9,33.5,43.2,30.1,46.9,30z"/>
+								<path d="M56.6,61.7c-0.6-6.5,3.7-10.3,11.7-10.4C76.4,51.2,81,55,80.6,61.7C72.6,61.7,64.6,61.7,56.6,61.7z"/>
+								<path d="M67.7,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C62.4,40.3,64.9,37.6,67.7,37.6z"/>
+								<path d="M16.3,61.7C15.7,55.2,20,51.4,28,51.3c8.1-0.1,12.7,3.7,12.3,10.4C32.3,61.7,24.3,61.7,16.3,61.7z"/>
+								<path d="M27.5,37.6c2.8,0,5.4,2.5,5.4,5.3c0,2.6-2.4,5.1-5,5.3c-2.8,0.1-5.5-2.3-5.6-5.1C22.1,40.3,24.6,37.6,27.5,37.6z"/>
+						</svg>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<input type="text" class="textBox" id="shareLink" placeholder="Shareable Link" onClick="this.setSelectionRange(0, this.value.length)" style="margin-top: 20px;">
+</div>
+</div>
+
+{% if ownTopic or current_user.admin %}
+<!-- Topic delete popup -->
+<div class="popupContainer">
+	<div class="popup" id="deletePopup">
+		<h2>Are You Sure?</h2>
+		<p>All of your questions for this topic will be lost forever, including yours and other user's results.</p>
+		<form method="POST" class="hideInput" action="{{ url_for('topic.delete') }}">
+			<svg onclick="hidePopup()" class="hidePopup" viewBox="0 0 300 300" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<input type="checkbox" id="topicToDelete" name="topicToDelete" value="{{ topic.id }}" checked>
+			<button type="button" class="popupButton" onclick="submit()">Delete</button>
+		</form>
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/wysihtml-toolbar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parserRules.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mousetrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/topic.min.js', v=version) }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.scrolltofixed.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sortable.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js"></script>
+<script>
+	{% for question in questions %}
+		createEditor({{ question['number'] }});
+		questionEditor{{ question['number'] }}.setValue('{{ question['question']|safeJavascript|safe }}');
+		answerEditor{{ question['number'] }}.setValue('{{ question['answer']|safeJavascript|safe }}');
+		showPlaceholder({{ question['number'] }});
+	{% endfor %}
+
+	questionNumber = $('.editor').length;
+
+	// If clicked an editor
+	$('body').on('focus click', function(e) {
+		interaction = true; // To enable prevent page leave
+
+		if ($(':focus').hasClass('questionTopicText')) {
+			var number = $(':focus').attr('number');
+			$('.questionToolbar').slideDown(50);
+			$('.toolbar').hide();
+			$('#toolbarQ' + number).show();
+		}
+		else if ($(':focus').hasClass('answerTopicText')) {
+			var number = $(':focus').attr('number');
+			$('.questionToolbar').slideDown(50);
+			$('.toolbar').hide();
+			$('#toolbarA' + number).show();
+		}
+		else if (!$(e.target).parents('.toolbarContainer').length) {
+			$('.toolbar').hide();
+			noToolbar();
+		}
+	});
+
+	// Fix for issue on iOS when the window scrolls when dragging a question
+	window.addEventListener( 'touchmove', function() {})
+
+	var list = document.getElementsByClassName('topicQuestions')[0];
+	var editableList = Sortable.create(list, {
+		animation: 150,
+		scrollSpeed: 15,
+		handle: '.questionSortHandlerContainer',
+		ghostClass: 'editorSortPlaceholder',
+		onEnd: function() { fixQuestionNumbers() }
+	});
+
+	// Initate scroll to fixed toolbar
+	if (!mobileDisplay()) {
+		$(document).ready(function() {
+			$('.questionToolbar').scrollToFixed({
+				marginTop: $('nav').outerHeight() - 1,
+				zIndex: 1,
+				preFixed: function() {
+					$(this).toggleClass('questionToolbarSticky');
+					$(this).css('width', '100.1%');
+				},
+				postFixed: function() {
+					$(this).toggleClass('questionToolbarSticky');
+				}
+			});
+		});
+	}
+
+	// Create a list of topic names for validation
+	topicList = [];
+	{% for topic in topics %}
+		topicList.push('{{ topic.name|lower|safeJavascript }}');
+	{% endfor %}
+
+	{% if not current_user.is_anonymous() %}
+		if ($('.progressChart').length) {
+			Chart.defaults.global.defaultFontFamily = "'Texta-Regular'";
+			Chart.defaults.global.elements.point = {
+				hoverRadius: 6,
+				hitRadius: 10,
+			};
+
+			if (mobileDisplay()) {
+				var tickFontSize = 14
+				var stepSize = 25
+			}
+			else {
+				var tickFontSize = 18
+				var stepSize = 20
+			}
+
+			progressChart = new Chart($('.progressChart canvas'), {
+				type: 'line',
+				data: {
+					labels: [
+						{% for result in resultsDate %}
+							'{{ result.date }}',
+						{% endfor %}
+					],
+					datasets: [{
+						fillColor: 'transparent',
+						borderColor: textcolor,
+						pointBackgroundColor: textcolor,
+						pointRadius: 6,
+						backgroundColor: 'transparent',
+						pointHoverBackgroundColor: textcolor,
+						pointHoverBorderColor: textcolor,
+						lineTension: 0,
+						data: [
+							{% for result in resultsPercentage %}
+								{{ result.percentage }},
+							{% endfor %}
+						],
+					}]
+				},
+
+				options: {
+					scales: {
+						yAxes: [{
+							gridLines: {
+								lineWidth: 2,
+								zeroLineWidth: 2,
+								zeroLineColor: navcolor,
+								drawBorder: false
+							},
+
+							ticks: {
+								callback: function(label, index, labels) {
+									return label + '%    ';
+								},
+								max: 100,
+								min: 0,
+								stepSize: stepSize,
+								fontSize: tickFontSize,
+								fontColor: textcolor
+							},
+						}],
+						xAxes: [{
+							lineColor: 'transparent',
+							gridLines: {
+								lineColor: 'transparent',
+								display: false,
+							},
+							ticks: {
+								fontSize: tickFontSize,
+								fontColor: textcolor
+							}
+						}]
+					},
+					legend: {
+						display: false
+					},
+					tooltips: {
+						mode: 'x-axis',
+						titleFontColor: bgcolor,
+						bodyFontColor: bgcolor,
+						titleFontSize: 18,
+						bodyFontSize: 22,
+						backgroundColor: textcolor,
+						cornerRadius: 5,
+						callbacks: {
+							label: function(tooltipItem, data) {
+								return tooltipItem.yLabel + '%';
+							}
+						}
+					}
+				}
+			});
+		}
+	{% endif %}
+</script>
+{% endblock %}

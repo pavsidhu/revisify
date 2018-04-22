@@ -1,0 +1,49 @@
+// main: ../main.sass
+
+.selectator_element
+  width: 90%
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  cursor: pointer
+
+  *
+    font-family: 'Texta-Regular', sans-serif
+
+.selectator_chosen_item_title
+  color: $grey-3 !important
+  font-size: 2.2em
+  color: $grey-3
+
+.selectator_option
+  font-size: 2.2em
+
+  &.active
+    background-color: $grey-2
+
+    *
+      color: $grey-3
+
+input ~ .dropdownArrow
+  display: block
+  fill: $grey-3
+  width: 25px
+  height: 25px
+  margin: 0 auto
+  display: block
+  position: relative
+  bottom: 8.3em
+  left: 22.5em
+
+@media only screen and (min-width: $tablet)
+  .selectator_element
+    width: 70%
+
+  .selectator_chosen_item_title
+    margin-top: 0.18em
+    font-size: 3em
+
+@media only screen and (min-width: $desktop)
+  .selectator_element
+    width: 50%
+    max-width: 800px

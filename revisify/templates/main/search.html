@@ -1,0 +1,189 @@
+{% extends "default.html" %}
+{% block title %}
+	{% if noResults %}
+		Revisify Search - No Results
+	{% else %}
+		Revisify Search - {{ originalQuery }}
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+<section>
+{% if noResults %}
+<h1>Sorry, nothing was found.</h1>
+{% else %}
+<h1>Search Results</h1>
+{% endif %}
+
+{% if not noResults %}
+
+	<div class="segment searchToggle">
+			<!-- Arranged in this manner to prevent annoying spacing between spans -->
+			<span class="active">
+			Subjects</span><span>
+			Topics</span><span>
+			People</span>
+	</div>
+
+	<div class="searchResults row">
+
+		<div class="searchResultsSubjects small-12 large-4 column">
+			<h2>Subjects</h2>
+
+			{% if subjectResult %}
+
+				{% for subject in subjectResult %}
+					<a href="{{ url_for('subject.subjectList', hash=subject.hash, slug=subject.slug) }}">
+						<div class="searchItem">
+
+								<div class="searchItemIcon unselectable" style="color: {{ subject.textcolor }}; background-color: {{ subject.iconcolor }};">
+									{{ subject.subject|firstChar }}
+								</div>
+
+								<div class="searchItemText">
+
+									<div class="searchItemTextTitle">{{ subject.subject }}</div>
+
+									<div class="searchItemTextSubtitle">
+										<img src="{{ subject.icon['80'] }}" alt="{{ subject.user.name }}">
+										<span>By {{ subject.user.name }}</span>
+									</div>
+
+								</div>
+
+						</div>
+					</a>
+				{% endfor %}
+
+			{% else %}
+
+				<p>No subjects were found</p>
+
+			{% endif %}
+
+		</div>
+
+		<div class="searchResultsTopics small-12 large-4 column">
+			<h2>Topics</h2>
+
+			{% if topicResult %}
+
+				{% for topic in topicResult %}
+					<a href="{{ url_for('topic.overview', hash=topic.hash, subjectSlug=topic.subjectSlug, topicSlug=topic.slug) }}">
+						<div class="searchItem">
+
+								<div class="searchItemIcon unselectable" style="color: {{ topic.textcolor }}; background-color: {{ topic.iconcolor }};">
+									{{ topic.topic|firstChar }}
+								</div>
+
+								<div class="searchItemText">
+
+									<span class="searchItemTextTitle">{{ topic.topic }}</span>
+
+									<div class="searchItemTextSubtitle">
+										<img src="{{ topic.icon['80'] }}" alt="{{ topic.user.name }}">
+										<span>By {{ topic.user.name }}</span>
+									</div>
+
+								</div>
+
+						</div>
+					</a>
+				{% endfor %}
+
+			{% else %}
+
+				<p>No topics were found</p>
+
+			{% endif %}
+		</div>
+
+		<div class="searchResultsPeople small-12 large-4 column">
+			<h2>People</h2>
+
+			{% if userResult %}
+
+					{% for user in userResult %}
+						<a href="{{ url_for('social.user', hash=user.hash) }}">
+							<div class="searchItem">
+
+									<div class="searchItemIcon" style="background-image: url('{{ user['icon']['270'] }}');">
+									</div>
+
+									<div class="searchItemText">
+
+										<span class="searchItemTextTitle">{{ user.name }}</span>
+
+										<div class="searchItemTextSubtitle">
+											{% if user.education %}
+												<span>{{ user.education }}</span>
+											{% elif user.location %}
+												<span>{{ user.location }}</span>
+											{% endif %}
+										</div>
+
+									</div>
+
+							</div>
+						</a>
+					{% endfor %}
+
+			{% else %}
+
+				<p>No people were found</p>
+
+			{% endif %}
+		</div>
+
+	</div>
+
+	<div class="loadingContainer">
+		<div class="loading"></div>
+	</div>
+{% endif %}
+
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+	$('.searchBox').val('{{ originalQuery|safeJavascript|safe }}');
+
+	// Set to 2 so that the next page loaded will be 2 instead of 1
+	var page = 2;
+
+	var ajaxReady = true
+
+	$(window).scroll(function() {
+		if (ajaxReady === false) {
+			return
+		}
+
+		if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
+			ajaxReady = false;
+
+			$('.loadingContainer').show();
+
+			Sijax.request('loadMore', [page], {
+				success: function (commandsArray) {
+					$('.loadingContainer').hide();
+
+					jQuery.each(commandsArray, function (idx, command) {
+						var callback = Sijax.getCommandProcessor(command.type);
+						callback(command);
+					});
+
+					$('.page' + page).slideDown(500);
+					page += 1;
+
+					setTimeout(function() {
+						ajaxReady = true;
+					}, 200)
+				}
+			});
+		}
+
+	});
+
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "default.html" %}
+{% block title %}Revisify - {{ article.title|title }}{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/zoom.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<section class="narrowWidth">
+	<h1 style="margin-bottom: 0;">{{ article.title|title }}</h1>
+	<h4 style="text-align: center; line-height:3em;">
+		<a href="{{ url_for('help.support') }}">< Return to Help Center</a>
+	</h4>
+
+	{{ article.content|safe }}
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/transition.js') }}"></script>
+{% endblock %}

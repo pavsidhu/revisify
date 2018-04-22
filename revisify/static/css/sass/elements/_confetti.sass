@@ -1,0 +1,59 @@
+// main: ../main.sass
+
+@keyframes confetti1
+  0%
+    top: 0
+    transform: rotateZ(70deg) rotateY(240deg) rotateX(0deg)
+  10%
+    opacity: 0.8
+  99%
+    top: 97vh
+    transform: rotateZ(280deg) rotateY(50deg) rotateX(150deg)
+    opacity: 0.5
+    display: none
+  100%
+    opacity: 0
+
+@keyframes confetti2
+  0%
+    top: 0
+    transform: rotateX(190deg) rotateZ(240deg)
+  10%
+    opacity: 0.8
+  99%
+    top: 97vh
+    transform: rotateZ(-10deg) rotateY(200deg) rotateX(-130deg)
+    opacity: 0.5
+    display: none
+  100%
+    opacity: 0
+
+@keyframes confetti3
+  0%
+    top: 0
+    transform: rotateZ(130deg) rotateX(-120deg)
+  10%
+    opacity: 0.8
+  99%
+    top: 97vh
+    transform: rotateZ(-50deg) rotateX(280deg)
+    opacity: 0.5
+    display: none
+  100%
+    opacity: 0
+
+.confettiContainer
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 10
+  width: 100%
+  height: 100%
+
+  .confetti
+    position: absolute
+    background-color: #fff
+    width: 3em
+    height: 3em
+    border-radius: 0.2em
+    opacity: 0

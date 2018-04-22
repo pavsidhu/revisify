@@ -1,0 +1,109 @@
+{% extends "study/template.html" %}
+
+{% block title %}
+	Revisify - {{ topic.name }} Test
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+	.progressBarContainer {
+		background-color: {{ navcolor }};;
+	}
+	.progressBarContainer .progressBar {
+		color: {{ bgcolor }};
+		background-color: {{ textcolor }};
+	}
+
+	.progressBarContainer .progressBar .progressBarText {
+		color: {{ navcolor }};
+	}
+
+	.progressBarContainer .progressBar .progressBarText.progressBarTextOutside {
+		color: {{ textcolor }};
+	}
+
+	.studyBottomBar div {
+		bottom: 16px
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+	{{ super() }}
+
+	<div class="progressBarContainer">
+		<div class="progressBar">
+			<div class="progressBarText">1/{{ topic.questions|length }}</div>
+		</div>
+	</div>
+
+	<div class="weeklyGoal weeklyGoalOverlay hidden">
+		<h1>Your Weekly Goal</h1>
+		<svg class="weeklyGoalChart" viewBox="0 0 200 200">
+			<circle class="weeklyGoalChartBackdrop" r="80" cy="100" cx="100" stroke-width="32" stroke="#1e272b" fill="none"/>
+			<circle class="weeklyGoalChartProgress" r="80" cy="100" cx="100" stroke-width="32" stroke="#c2185b" fill="none"/>
+			<text y=105>
+				<tspan x=100 text-anchor="middle">Completed!</tspan>
+			</text>
+		</svg>
+
+		<button>Okay!</button>
+	</div>
+
+	<div class="confettiContainer hidden"></div>
+{% endblock %}
+
+{% block results %}
+	<div class="row resultCharts limitRowWidth">
+
+		<div class="small-12 large-6 column weeklyGoalColumn">
+			<div class="columnContainer">
+				<h2>Weeky Goal</h2>
+				<p class="weeklyGoalText"></p>
+
+				<div class="weeklyGoal resultWeeklyGoal">
+					<svg class="weeklyGoalChart" viewbox="0 0 200 200">
+						<circle class="weeklyGoalChartBackdrop" r="80" cy="100" cx="100" stroke-width="32" stroke="#1e272b" fill="none"/>
+						<circle class="weeklyGoalChartProgress" r="80" cy="100" cx="100" stroke-width="32" stroke="#c2185b" fill="none"/>
+						<text>
+							<tspan class="weeklyGoalFraction" x=100 y=100 text-anchor="middle"></tspan>
+							<tspan class="weeklyGoalDescription" x=100 y=136 text-anchor="middle">Topics</tspan>
+						</text>
+					</svg>
+				</div>
+			</div>
+		</div>
+
+		<div class="small-12 large-6 column pastResultsColumn">
+			<div class="columnContainer">
+				<h2>Your Past Results</h2>
+				<div class="resultChart">
+					<canvas></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+<script>
+	score = 0;
+	percentage = (number / questions.length) * 100;
+
+	changeQuestion();
+
+	$('.tick').click(function() {
+	  changeQuestion(false, true, false);
+	});
+
+	$('.cross').click(function() {
+		changeQuestion(false, false, false);
+	});
+
+	$('.undoQuestion').click(function() {
+  	changeQuestion(false, null, true);
+	});
+</script>
+{% endblock %}

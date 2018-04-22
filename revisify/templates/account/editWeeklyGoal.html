@@ -1,0 +1,65 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Edit My Weekly Goal{% endblock %}
+
+{% block content %}
+<section class="weeklyGoalPage">
+  <h1>Edit My Weekly Goal</h1>
+  <form method="POST" class="hideInput">
+    <p>Choose the number of topics you would like to study per week, be realistic!</p>
+
+    <div class="weeklyGoalPopupChoice" topic-goal="6">
+      <h2>Easy</h2>
+      <p>(6 topics per week)</p>
+    </div>
+
+    <div class="weeklyGoalPopupChoice" topic-goal="8">
+      <h2>Normal</h2>
+      <p>(8 topics per week)</p>
+    </div>
+
+    <div class="weeklyGoalPopupChoice" topic-goal="12">
+      <h2>Hard</h2>
+      <p>(12 topics per week)</p>
+    </div>
+
+    <div class="weeklyGoalPopupChoice" topic-goal="16">
+      <h2>Master</h2>
+      <p>(16 topics per week)</p>
+    </div>
+
+    <div class="weeklyGoalPopupChoice weeklyGoalPopupChoiceCustom" topic-goal="10">
+      <h2>Custom</h2>
+      <div class="weeklyGoalPopupChoiceCustomChoose">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="50"/>
+          <text class="unselectable" x="30" y="73">-</text>
+        </svg>
+        <p><span>10</span> topic<span>s</span> per week</p>
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="50"/>
+          <text class="unselectable" x="24" y="80">+</text>
+        </svg>
+      </div>
+    </div>
+
+    <button type="button" onclick="weeklyGoalSubmit()">Save</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    {% if current_user.weeklyGoal == 6 %}
+      $('.weeklyGoalPopupChoice[topic-goal="6"]').addClass('active');
+    {% elif current_user.weeklyGoal == 8 %}
+      $('.weeklyGoalPopupChoice[topic-goal="8"]').addClass('active');
+    {% elif current_user.weeklyGoal == 12 %}
+      $('.weeklyGoalPopupChoice[topic-goal="12"]').addClass('active');
+    {% elif current_user.weeklyGoal == 16 %}
+      $('.weeklyGoalPopupChoice[topic-goal="16"]').addClass('active');
+    {% else %}
+      $('.weeklyGoalPopupChoiceCustom').addClass('active');
+      $('.weeklyGoalPopupChoiceCustom p span').eq(0).html({{ current_user.weeklyGoal }});
+    {% endif %}
+  </script>
+{% endblock %}

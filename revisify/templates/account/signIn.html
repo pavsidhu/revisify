@@ -1,0 +1,48 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Sign In{% endblock %}
+
+{% block head %}
+<style>
+	input[type="checkbox"]:checked + label {
+		background-image: url({{ url_for('static', filename="images/checkbox.png") }});
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Sign In</h1>
+
+	{{ button('Sign In With Google', url_for('signInOauth.authorize', provider='google'), class='signInSocial signInGoogle') }}
+	{{ button('Sign In With Facebook', url_for('signInOauth.authorize', provider='facebook'), class='signInSocial signInFacebook') }}
+
+	<div class="signInDivider unselectable">
+		<p>or</p>
+	</div>
+
+	<form method="POST" class="signInForm">
+		{{ form.hidden_tag() }}
+		{{ form.email(placeholder='Email', class="textBox") }}
+
+		{{ form.password(placeholder='Password', class="textBox") }}
+		<p>
+			<a href="{{ url_for('password.forgot') }}">Forgot Your Password?</a>
+		</p>
+
+		{{ form.remember() }}
+		<label for="remember" class="unselectable"></label>
+		{{ form.remember.label(class="unselectable remember") }}
+
+		{% for error in form.email.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		{% for error in form.password.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		<button onclick="submit()">Sign In</button>
+		<p>Don't have an account? <a href="/register" class="underline">Create one here.</a></p>
+	</form>
+</section>
+{% endblock %}

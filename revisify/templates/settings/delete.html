@@ -1,0 +1,20 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Delete Your Account{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Delete Your Account</h1>
+	<h2>Are You Sure?</h2>
+	<p >You will not be able to recover your account or your subjects once you delete your account.</p>
+	<form method="POST" class="hideInput">
+		{{ form.hidden_tag() }}
+
+		{{ form.password(placeholder='Password', class="textBox", autocomplete="off") }}
+
+		{% for error in form.password.errors %}
+			<p class="errorText">{{ error }}</p>
+		{% endfor %}
+
+		<button type="button" class="popupButton" onclick="submit()" style="background-color: #C62828; color: #FFEBEE;">Confirm</button>
+	</form>
+{% endblock %}

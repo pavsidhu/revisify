@@ -1,0 +1,43 @@
+// main: ../main.sass
+
+@keyframes loading
+  0%
+    transform: translateY(15px)
+
+  100%
+    transform: translateY(-15px)
+
+.loadingContainer
+  display: none
+
+.loading
+  width: 20px
+  height: 20px
+  display: block
+  background-color: #cfd8dc
+  border-radius: 50%
+  margin: 100px auto
+  animation: loading 0.3s ease-in-out 0.2s infinite alternate
+
+  &:before
+    content: ''
+    width: 20px
+    height: 20px
+    display: block
+    background-color: #cfd8dc
+    border-radius: 50%
+    position: relative
+    right: 40px
+    animation: loading 0.3s ease-in-out infinite alternate
+
+  &:after
+    content: ''
+    width: 20px
+    height: 20px
+    display: block
+    background-color: #cfd8dc
+    border-radius: 50%
+    position: relative
+    left: 40px
+    bottom: 20px
+    animation: loading 0.3s ease-in-out 0.4s infinite alternate

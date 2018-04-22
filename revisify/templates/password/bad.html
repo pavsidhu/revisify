@@ -1,0 +1,10 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Bad Link{% endblock %}
+
+{% block content %}
+<section>
+		<h1>Bad Password Reset Link</h1>
+			<p>Your password reset link is incorrect or it has expired, try sending another email.</p>
+		{{ button('Resend Email', url_for('password.forgot')) }}
+</section>
+{% endblock %}

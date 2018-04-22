@@ -1,0 +1,100 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Setup Your Profile{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fm.selectator.jquery.css') }}">
+{% endblock %}
+
+{% block content %}
+<section>
+
+  <h1 class="noMarginBottom">Some Details</h1>
+
+  <div class="image-editor">
+    <h2 style="margin-bottom: 30px;">Add a Profile Picture</h2>
+
+    <div class="cropit-image-preview-container">
+      <div class="cropit-image-preview">
+        <div class="cropit-image-preview-overlay"></div>
+        <p class="unselectable" alt="Upload a profile picture">Upload</p>
+      </div>
+    </div>
+
+    <p class="cropit-image-change">
+      <span>Change Photo</span>
+    </p>
+
+    <div class="cropit-zoom-container">
+      <svg class="zoomIcon zoomIconSmall" fill="#cfd8dc" x="0px" y="0px" viewBox="-8.3 26.3 50 50" xml:space="preserve">
+        <path d="M16.7,40.3c-3.6,0-6.4,3.3-6.4,7.3c0,4,2.9,7.3,6.4,7.3c3.6,0,6.4-3.3,6.4-7.3C23.1,43.6,20.2,40.3,16.7,40.3"/>
+        <path d="M31,73V62.4c0-2.8-2.2-5-5-5H7.3c-2.8,0-5,2.2-5,5V73H31z"/>
+        <path d="M36.2,31.8v39h-39v-39H36.2 M41.7,26.3h-50v50h50V26.3L41.7,26.3z"/>
+      </svg>
+
+      <input type="range" value="0" class="cropit-image-zoom-input">
+
+      <svg class="zoomIcon zoomIconLarge" fill="#cfd8dc" x="0px" y="0px" viewBox="-8.3 26.3 50 50" xml:space="preserve">
+        <path d="M16.7,40.3c-3.6,0-6.4,3.3-6.4,7.3c0,4,2.9,7.3,6.4,7.3c3.6,0,6.4-3.3,6.4-7.3C23.1,43.6,20.2,40.3,16.7,40.3"/>
+        <path d="M31,73V62.4c0-2.8-2.2-5-5-5H7.3c-2.8,0-5,2.2-5,5V73H31z"/>
+        <path d="M36.2,31.8v39h-39v-39H36.2 M41.7,26.3h-50v50h50V26.3L41.7,26.3z"/>
+      </svg>
+    </div>
+
+    <form id="profilePicture" class="hidden" method="POST" enctype="multipart/form-data">
+
+      {{ profilePictureForm.hidden_tag() }}
+      {{ profilePictureForm.crop() }}
+
+      <input type="file" name="file" class="cropit-image-input" id="picture">
+    </form>
+  </div>
+
+  <form id="userDetails" class="hidden" method="POST">
+    <h2>Tell Us About Yourself</h2>
+
+    {{ userDetailsForm.hidden_tag() }}
+
+    {{ userDetailsForm.education(placeholder='Enter your place of education', class='textBox', maxlength='100', autocomplete="off") }}
+    {{ userDetailsForm.location(placeholder='Select your location', class='textBox') }}
+  </form>
+
+  <p class="errorText"></p>
+
+  <button type="submit" class="setupProfileButton" onclick="setupProfileNext(skip=false)">Next</button>
+  <p class="skipForm">
+    <span onclick="setupProfileNext(skip=true)">Skip</span>
+  </p>
+</section>
+{% endblock %}
+
+{% block notificationBarCSS %}
+<style>
+  .notificationBar {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/jquery.cropit.js') }}"></script>
+<script src="{{ url_for('static', filename='js/fm.selectator.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sijax/sijaxUpload.js') }}"></script>
+<script>
+  img = $('.image-editor').cropit({
+    smallImage: 'stretch',
+    maxZoom: 2,
+    onImageLoaded: function() {
+      profilePictureValidation()
+    }
+  });
+
+	$('select').selectator({
+    useSearch: false
+  });
+
+  $('.selectator_chosen_item_title').html('<span style="color: #a7a7a7;">Select your location</span>');
+
+  {{ g.sijax.get_js()|safe }}
+  {{ formInit|safe }}
+</script>
+{% endblock %}

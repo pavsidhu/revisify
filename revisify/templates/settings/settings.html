@@ -1,0 +1,177 @@
+{% extends "default.html" %}
+{% block title %}Revisify - Settings{% endblock %}
+
+{% block content %}
+<section>
+	<h1>Settings</h1>
+
+	<h2>Your Profile</h2>
+	<p>Change the visibility of your profile.</p>
+
+	{% if current_user.profile %}
+		<button onclick="profilePopup()">Make Profile Private</button>
+	{% else %}
+		<form action="{{ url_for('settings.changeProfile') }}">
+			<button>Make Profile Public</button>
+		</form>
+	{% endif %}
+</section>
+
+<section>
+	<h2>Your Social Accounts</h2>
+
+	<p>Connect to Google or Facebook to sign in quickly and securely.</p>
+
+	{% if googleAccount %}
+		{{ button('Disconnect from Google', url_for('signInOauth.unauthorize', provider='google'), class='signInGoogle', style='margin-bottom: 0;') }}
+		<p style="margin-top: 10px;">You're connected to Google as
+			<a href="{{ googleAccount.url }}" class="underline">{{ googleAccount.name }}</a>
+		</p>
+	{% else %}
+		<form method="POST">
+			{{ button('Connect to Google', name='submit', value='socialConnectGoogle', class='signInGoogle') }}
+		</form>
+	{% endif %}
+
+	{% if facebookAccount %}
+		{{ button('Disconnect from Facebook', url_for('signInOauth.unauthorize', provider='facebook'), class='signInFacebook', style='margin-bottom: 0;') }}
+		<p style="margin-top: 10px;">You're connected to Facebook as
+			<a href="{{ facebookAccount.url }}" class="underline">{{ facebookAccount.name }}</a>
+		</p>
+	{% else %}
+		<form method="POST">
+			{{ button('Connect to Facebook', name='submit', value='socialConnectFacebook', class='signInFacebook') }}
+		</form>
+	{% endif %}
+
+</section>
+
+<section>
+	<h2>Update Your Email Address</h2>
+	<p>Once you update your email address, you will receive an email to confirm your decision.</p>
+
+	<form method='POST' id="changeEmail">
+		{{ emailForm.hidden_tag() }}
+		{{ emailForm.email(placeholder='New email', class="textBox", autocomplete="off") }}
+
+		{% if form == 'e' %}
+			{% for error in emailForm.email.errors %}
+				<p class="errorText">{{ error }}</p>
+			{% endfor %}
+
+			{% for message in get_flashed_messages(category_filter=['changeEmailForm']) %}
+				<p class="successText">{{ message }}</p>
+			{% endfor %}
+		{% endif %}
+
+		<button onclick="submit()" name="submit" value="changeEmail">Update</button>
+	</form>
+</section>
+
+<section>
+	{% if current_user.password %}
+		<h2>Change Your Password</h2>
+		<form method='POST' id="changePassword">
+			{{ passwordForm.hidden_tag() }}
+			{{ passwordForm.oldPassword(placeholder='Old password', class="textBox", autocomplete="off") }}
+
+			{% if form == 'changeEmail' %}
+				{% for error in passwordForm.oldPassword.errors %}
+					<p class="errorText">{{ error }}</p>
+				{% endfor %}
+			{% endif %}
+
+			{{ passwordForm.newPassword(placeholder='New password', class="textBox", autocomplete="off") }}
+
+			{% if form == 'changePassword' %}
+				{% for error in passwordForm.newPassword.errors %}
+					<p class="errorText">{{ error }}</p>
+				{% endfor %}
+			{% endif %}
+
+			{% for message in get_flashed_messages(category_filter=['passwordForm']) %}
+				<p class="successText">{{ message }}</p>
+			{% endfor %}
+
+			<button onclick="submit()" name="submit" value="changePassword">Change</button>
+		</form>
+	{% else %}
+		<h2>Add a Password</h2>
+		<form method='POST' id="addPassword">
+			{{ addPasswordForm.hidden_tag() }}
+			{{ addPasswordForm.password(placeholder='Password', class="textBox", autocomplete="off") }}
+
+			{% if form == 'addPassword' %}
+				{% for error in addPasswordForm.password.errors %}
+					<p class="errorText">{{ error }}</p>
+				{% endfor %}
+			{% endif %}
+
+			{% for message in get_flashed_messages(category_filter=['addPasswordForm']) %}
+				<p class="successText">{{ message }}</p>
+			{% endfor %}
+
+			<button onclick="submit()" name="submit" value="addPassword">Change</button>
+		</form>
+	{% endif %}
+</section>
+
+<section class="settingsDelete">
+		<button style="background-color: #C62828; color: #FFEBEE;">Delete Your Account</button>
+		<p class="errorText">{{ error }}</p>
+</section>
+
+<!-- Profile Popup -->
+<div class="popupContainer">
+	<div class="popup" id="profilePopup">
+		<svg onclick="hidePopup()" class="hidePopup" viewBox="0 0 300 300" fill="{{ textcolor }}">
+			<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+		</svg>
+		<h2>Are You Sure?</h2>
+		<form action="{{ url_for('settings.changeProfile') }}">
+			<p>By making your profile private, you will lose your followers and they will no longer be able to access your content.</p>
+			<button type="button" class="popupButton" onclick="submit()">Confirm</button>
+		</form>
+	</div>
+
+{% for message in get_flashed_messages(category_filter=['popup']) %}
+	<div class="popupContainer">
+		<div class="popup" id="oauthPopup">
+			<svg onclick="hidePopup()" class="hidePopup" viewBox="0 0 300 300" fill="{{ textcolor }}">
+				<path d="M225.2,170.6L204.6,150l37.7-37.7L297,57.5c4-4,4-10.4,0-14.4L256.9,3c-4-4-10.4-4-14.4,0l-67.7,67.7L150,95.4L125.5,71l-68-68c-4-4-10.4-4-14.4,0L3,43.1c-4,4-4,10.4,0,14.4l62.3,62.3L95.4,150l-32,32L3,242.5c-4,4-4,10.4,0,14.4L43.1,297c4,4,10.4,4,14.4,0l65.5-65.5l27-27l25.5,25.5l66.9,66.9c4,4,10.4,4,14.4,0l40.1-40.1c4-4,4-10.4,0-14.4L225.2,170.6z"/>
+			</svg>
+			<h2>Unable to Connect</h2>
+			<p>{{ message }}</p>
+			<button type="button" onclick="hidePopup()" style="margin-bottom: 0;">Okay</button>
+		</div>
+		<script>
+			$('.overlay').fadeIn(50);
+			$('#oauthPopup').fadeIn(50);
+		</script>
+	</div>
+{% endfor %}
+
+{% if scroll %}
+<script>
+	{% if scroll %}
+		$('html, body').animate({
+				scrollTop: $('{{ scroll }}').offset().top - 300
+		}, 500);
+	{% endif %}
+</script>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+	$('.settingsDelete button').click(function() {
+		if ($('form#changePassword').length) {
+			window.location.href = '{{ url_for('settings.delete') }}';
+		}
+		else {
+			$('.settingsDelete p').html('For security reasons, please add a password before deleting your account.');
+		}
+	});
+</script>
+{% endblock%}

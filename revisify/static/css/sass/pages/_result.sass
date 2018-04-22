@@ -1,0 +1,199 @@
+// main: ../main.sass
+
+.reviewQuestions
+  .reviewQuestionsContainer
+    .reviewQuestion
+      margin: 1em
+      font-family: 'Texta-Regular', sans-serif
+      font-size: 1em
+      position: relative
+
+      &:last-child
+        margin-bottom: 0
+
+      div
+        text-align: left
+        font-size: 2em
+        margin-top: 10px
+        padding: 0.2em 0.3em
+        line-height: 1.4em
+
+        &.reviewQuestionQuestion
+          font-size: 2.3em
+          line-height: 1.35em
+
+        &.reviewQuestionAnswer:empty
+          margin-top: 0
+          display: none
+
+      li
+        margin-left: 25px
+        list-style: disc
+        list-style-position: outside
+
+      img
+        margin: 20px 0
+        display: block
+        max-width: 200px
+        background-color: white
+
+      svg
+        border-top-left-radius: 5px
+        padding: 0.7em
+        width: 4em
+        height: 4em
+        position: absolute
+        right: 0
+        bottom: 0
+
+  .reviewQuestionsMore
+    display: none
+
+  .reviewQuestionsMoreShow span
+    cursor: pointer
+
+.weeklyGoalOverlay
+  text-align: center
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100vh
+  display: -webkit-flex
+  display: -ms-flex
+  display: flex
+  justify-content: center
+  flex-direction: column
+
+  *
+    z-index: 10
+
+  h1
+    color: $grey-1
+
+  &.weeklyGoal
+    svg.weeklyGoalChart
+      width: 25em
+      height: 25em
+      min-width: 25em
+      max-height: none
+
+      .weeklyGoalChartProgress
+        transition: stroke-dashoffset 500ms 300ms ease-out
+
+      @-webkit-keyframes weeklyGoalChartComplete
+        to
+          font-size: 25px
+          opacity: 1
+
+      @keyframes weeklyGoalChartComplete
+        to
+          font-size: 25px
+          opacity: 1
+
+      text
+        font-family: $font-regular
+        font-size: 15px
+        opacity: 0
+        fill: $grey-1
+        animation: weeklyGoalChartComplete 0.3s 800ms forwards
+        animation-timing-function: cubic-bezier(.17,.67,.44,1.58)
+
+  button
+    color: $grey-3
+    background-color: $grey-1
+
+    // The confetti will be above preventing clicks if z-index is <10
+    z-index: 11
+
+.weeklyGoalText
+  max-width: 600px
+  margin: 0 auto
+
+.resultWeeklyGoal
+  margin-top: 1.5em
+
+.resultButtons
+  margin: 25px auto
+  text-align: center
+
+  button
+    margin: 0.2em auto
+
+    svg
+      height: 1em
+      width: 1em
+      display: inline-block
+      vertical-align: middle
+      position: relative
+      bottom: 0.08em
+      margin: 0 auto 0.1em
+
+@media only screen and (min-width: $tablet)
+  .reviewQuestions
+    .reviewQuestionsContainer
+
+      .reviewQuestionRow
+        display: flex
+        margin: 1% 0
+
+      .reviewQuestion
+        position: relative
+        align-items: stretch
+        display: table-cell
+        vertical-align: top
+        width: 48%
+        margin: 0 2%
+        padding: 0.4em 1.5em
+
+        // This makes up for margin-top of question so that if the answer is
+        // empty, the question is centered in the container
+        div.reviewQuestionAnswer:empty
+          display: block
+          margin-top: 0
+
+        &:nth-child(even)
+          margin-left: 0.5%
+
+        &:nth-child(odd)
+          margin-right: 0.5%
+
+  .weeklyGoalOverlay.weeklyGoal
+    svg.weeklyGoalChart
+      width: 30em
+      height: 30em
+      min-width: 30em
+
+  .resultChart
+    width: 70%
+    margin: 0 auto
+
+@media only screen and (min-width: $desktop)
+  .weeklyGoalOverlay.weeklyGoal
+    svg.weeklyGoalChart
+      width: 35em
+      height: 35em
+      min-width: 35em
+
+  p.resultPercentage + div.row
+    margin-top: 3em
+
+    .columnContainer
+      height: 100%
+
+    .resultWeeklyGoal .weeklyGoalChart
+      max-width: 23em
+      width: 23em
+      height: 23em
+
+    .resultChart
+      width: auto
+      max-width: 500px
+
+  .resultButtons
+    div
+      display: inline
+      margin: 0 0.5em
+
+      button
+        margin: 0.3em auto
