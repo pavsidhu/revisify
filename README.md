@@ -1,6 +1,6 @@
-# Revisify Website
+# Revisify
 
-## Please note
+## Important Notice ⚠️
 
 Revisify has now shut down.
 
